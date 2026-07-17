@@ -1,0 +1,53 @@
+.footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0; /* behind <main>, revealed as content lifts away */
+  padding-block: 2rem;
+  background: var(--ground-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* Keep it in normal flow for users who opt out of motion tricks. */
+  .footer {
+    position: static;
+    border-top: 1px solid var(--line);
+    background: none;
+  }
+}
+
+.inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem 2rem;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+}
+
+.middle {
+  color: var(--bone-faint);
+}
+
+.right {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.right a {
+  color: var(--bone-dim);
+}
+
+.right a:hover {
+  color: var(--bone);
+}
+
+@media (max-width: 700px) {
+  .middle {
+    display: none;
+  }
+}

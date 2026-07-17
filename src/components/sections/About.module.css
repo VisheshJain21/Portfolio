@@ -1,0 +1,132 @@
+.section {
+  border-top: 1px solid var(--line);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(2rem, 6vw, 5rem);
+  align-items: start;
+}
+
+.heading {
+  font-size: var(--step-4);
+  margin-top: 1.4rem;
+}
+
+.facts {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.fact {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+}
+
+.factDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 10px 1px var(--glow);
+  flex: 0 0 auto;
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.portrait {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border: 1px solid var(--line-strong);
+  border-radius: 4px;
+  background:
+    radial-gradient(80% 90% at 70% 20%, rgba(255, 106, 43, 0.08), transparent 70%),
+    var(--panel);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.portraitImg {
+  object-fit: cover;
+  /* Duotone at rest — bone highlights over the ground color, amber-tinted
+     shadows — so the photo reads as part of the system, not a stock insert. */
+  filter: grayscale(1) contrast(1.08) brightness(0.92) sepia(0.14);
+  transition:
+    filter 0.6s var(--ease-out),
+    transform 0.6s var(--ease-out);
+}
+
+.portrait:hover .portraitImg,
+.portrait:focus-within .portraitImg {
+  filter: grayscale(0) contrast(1.02) brightness(1) sepia(0);
+  transform: scale(1.03);
+}
+
+.portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    transparent 55%,
+    rgba(10, 13, 19, 0.55) 100%
+  );
+}
+
+.portraitMono {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+}
+
+.portraitTag {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  color: var(--bone-faint);
+}
+
+.bio {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.bio p {
+  color: var(--bone-dim);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  max-width: 52ch;
+}
+
+.bio p:first-child {
+  color: var(--bone);
+  font-size: var(--step-1);
+  line-height: 1.5;
+}
+
+@media (max-width: 860px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

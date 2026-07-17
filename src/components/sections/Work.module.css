@@ -1,0 +1,246 @@
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 1.6rem;
+}
+
+.heading {
+  font-size: var(--step-4);
+  margin-top: 1.2rem;
+}
+
+.list {
+  display: block;
+}
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.4rem 132px 1fr auto;
+  gap: clamp(1rem, 3vw, 2.6rem);
+  align-items: center;
+  padding: clamp(1.5rem, 3.4vw, 2.6rem) 0.5rem;
+  border-bottom: 1px solid var(--line);
+  transition:
+    padding-left 0.55s var(--ease-out),
+    background-color 0.55s var(--ease-out);
+}
+
+/* Primary link overlays the whole row (valid HTML — no nested anchors) */
+.stretch {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Secondary links stay clickable above the overlay */
+.links {
+  position: relative;
+  z-index: 2;
+}
+
+/* Hover treatment lives on EVERY row (not just linked ones) — the amber
+   wash, left-shift, title colour + arrow move are identical for all four,
+   fixing the old "only odd/linked rows react" bug. */
+.row::before {
+  content: "";
+  position: absolute;
+  inset: 0 -1px;
+  background: radial-gradient(120% 140% at 0% 50%, rgba(255, 106, 43, 0.1), transparent 65%);
+  opacity: 0;
+  transition: opacity 0.5s var(--ease-out);
+  pointer-events: none;
+}
+
+.row:hover,
+.row:focus-within {
+  padding-left: 2rem;
+  background: linear-gradient(90deg, var(--panel), transparent 82%);
+}
+
+.row:hover::before,
+.row:focus-within::before {
+  opacity: 1;
+}
+
+.index {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.12em;
+  color: var(--signal);
+  align-self: start;
+  padding-top: 0.55rem;
+}
+
+/* Thumb slot — the DOM anchor a WebGL ripple-plane tracks (Prompt v3).
+   The <img> inside is the fallback/base layer; when the plane renders it
+   sits visually in front, matched to this box's rect every frame. */
+.thumb {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  border-radius: 3px;
+  overflow: hidden;
+  background: var(--panel-2);
+  align-self: center;
+}
+
+.thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.body {
+  display: block;
+  min-width: 0;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-weight: 360;
+  font-size: var(--step-3);
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+  color: var(--bone);
+  display: inline-block;
+  transition:
+    color 0.4s var(--ease-out),
+    transform 0.5s var(--ease-out);
+}
+
+.row:hover .title,
+.row:focus-within .title {
+  transform: translateX(6px);
+  color: var(--signal-soft);
+}
+
+.badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+  border: 1px dashed var(--line-strong);
+  border-radius: 3px;
+  padding: 0.28em 0.6em;
+  white-space: nowrap;
+}
+
+.pitch {
+  display: block;
+  margin-top: 0.65rem;
+  color: var(--bone-dim);
+  font-size: var(--step-0);
+  max-width: 58ch;
+}
+
+.highlight {
+  display: block;
+  margin-top: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  color: var(--signal);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 1rem;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  border: 1px solid var(--line-strong);
+  border-radius: 3px;
+  padding: 0.3em 0.65em;
+}
+
+.links {
+  display: flex;
+  gap: 1.4rem;
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.06em;
+  color: var(--bone-dim);
+}
+
+.arrow {
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  color: var(--bone-faint);
+  transition:
+    transform 0.5s var(--ease-out),
+    color 0.4s var(--ease-out);
+}
+
+.row:hover .arrow,
+.row:focus-within .arrow {
+  transform: translate(6px, -6px);
+  color: var(--signal);
+}
+
+.more {
+  margin-top: 2.4rem;
+}
+
+/* "More on GitHub" gets the same hover language as the rows. */
+.moreLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: var(--step-0);
+  letter-spacing: 0.06em;
+  color: var(--bone-dim);
+  transition:
+    color 0.4s var(--ease-out),
+    gap 0.4s var(--ease-out);
+}
+
+.moreLink .arrow {
+  font-size: 1em;
+}
+
+.moreLink:hover,
+.moreLink:focus-visible {
+  color: var(--signal);
+  gap: 1rem;
+}
+
+.moreLink:hover .arrow,
+.moreLink:focus-visible .arrow {
+  transform: translate(4px, -4px);
+  color: var(--signal);
+}
+
+@media (max-width: 640px) {
+  .row {
+    grid-template-columns: 2.1rem 1fr;
+  }
+  .arrow {
+    display: none;
+  }
+  /* Disabled below this width — editorial rows stay typographic on
+     phones; a zero-size rect also tells the WebGL plane not to render. */
+  .thumb {
+    display: none;
+  }
+}

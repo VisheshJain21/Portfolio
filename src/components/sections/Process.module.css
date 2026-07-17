@@ -1,0 +1,50 @@
+.section {
+  border-top: 1px solid var(--line);
+}
+
+.heading {
+  font-size: var(--step-4);
+  margin-top: 1.4rem;
+}
+
+.grid {
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.step {
+  background: var(--ground);
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+  transition: background-color 0.5s var(--ease-out);
+}
+
+.step:hover {
+  background: var(--panel);
+}
+
+.num {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.14em;
+  color: var(--signal);
+}
+
+.title {
+  margin-top: 1.4rem;
+  font-family: var(--font-display);
+  font-weight: 380;
+  font-size: var(--step-2);
+  letter-spacing: -0.015em;
+  line-height: 1.05;
+}
+
+.body {
+  margin-top: 0.9rem;
+  color: var(--bone-dim);
+  font-size: var(--step-0);
+  max-width: 38ch;
+}

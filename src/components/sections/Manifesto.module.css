@@ -1,0 +1,16 @@
+.section {
+  border-top: 1px solid var(--line);
+}
+
+.statement {
+  margin-top: 2.2rem;
+  font-size: var(--step-3);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  max-width: 26ch;
+  color: var(--bone-faint);
+}
+
+.word {
+  display: inline;
+}

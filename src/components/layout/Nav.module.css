@@ -1,0 +1,448 @@
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-nav);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem var(--gutter);
+  visibility: hidden; /* revealed by load choreography */
+  background: linear-gradient(to bottom, rgba(10, 13, 19, 0.85), transparent);
+  transition: padding 0.5s var(--ease-out);
+}
+
+/* Hover-reveal zone — a thin, invisible, always-present strip along the
+   top edge. z sits just BELOW the header: while the nav is visible the
+   header covers it (clicks unaffected); once the nav slides away this
+   strip is exposed and hovering it reverses the hide tween. */
+.hoverTrigger {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 28px;
+  z-index: calc(var(--z-nav) - 1);
+  pointer-events: auto;
+}
+
+/* Capsule morph — blurred glass panel fades in once scrolled */
+.nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: rgba(13, 17, 25, 0.72);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom: 1px solid var(--line);
+  opacity: 0;
+  transition: opacity 0.45s var(--ease-out);
+}
+
+.scrolled {
+  padding: 0.65rem var(--gutter);
+}
+
+.scrolled::before {
+  opacity: 1;
+}
+
+/* Warp Cut state — bar rides above the wipe (z 70); everything except the
+   clicked (held) label dims and blurs for the duration. */
+.nav[data-warp] {
+  z-index: 75;
+}
+
+.nav[data-warp] [data-nav-item] {
+  transition:
+    opacity 0.3s var(--ease-out),
+    filter 0.3s var(--ease-out);
+}
+
+.nav[data-warp] [data-nav-item]:not([data-warp-hold]):not(:has([data-warp-hold])) {
+  opacity: 0.22;
+  filter: blur(2px);
+}
+
+/* Pointer spotlight — molten glow follows the cursor inside the bar */
+.nav::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease-out);
+  background: radial-gradient(
+    180px 100px at var(--sx, 50%) var(--sy, 50%),
+    rgba(255, 106, 43, 0.13),
+    transparent 70%
+  );
+}
+
+.nav:hover::after {
+  opacity: 1;
+}
+
+/* Scroll progress hairline along the top edge */
+.progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--signal), var(--signal-soft));
+  box-shadow: 0 0 12px var(--glow);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+.brand {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--bone);
+  white-space: nowrap;
+  position: relative;
+  z-index: calc(var(--z-nav) + 2);
+}
+
+.status {
+  display: none;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 10px 1px var(--glow);
+  animation: pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+.links {
+  position: relative;
+  display: flex;
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+/* Liquid pill — morphs between links during a Warp Cut and tracks the
+   scroll-active section otherwise (GSAP animates x/width). */
+.indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 2em;
+  width: 0;
+  opacity: 0;
+  transform: translateY(-50%);
+  border-radius: 999px;
+  background: rgba(255, 106, 43, 0.09);
+  border: 1px solid rgba(255, 106, 43, 0.3);
+  pointer-events: none;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  transition: color 0.3s var(--ease-out);
+}
+
+.link:hover,
+.link:focus-visible,
+.link[data-active] {
+  color: var(--bone);
+}
+
+/* Active-section marker */
+.linkDot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--signal);
+  box-shadow: 0 0 8px var(--glow);
+  transform: scale(0);
+  transition: transform 0.35s var(--ease-out);
+}
+
+.link[data-active] .linkDot {
+  transform: scale(1);
+}
+
+/* Menu button — hidden on desktop; label rolls Menu ⇄ Close */
+.menuBtn {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bone);
+  position: relative;
+  z-index: calc(var(--z-nav) + 2);
+}
+
+.menuLabel {
+  display: block;
+  overflow: hidden;
+  height: 1.25em;
+}
+
+.menuLabel span {
+  display: block;
+  height: 1.25em;
+  line-height: 1.25em;
+  transition: transform 0.5s var(--ease-inout);
+}
+
+.menuLabelOpen span {
+  transform: translateY(-100%);
+}
+
+/* Full-screen overlay menu — clip-path wipe from the top.
+   Sits just BELOW the bar so the brand + Close button stay usable
+   (the header's own stacking context traps its children's z-index). */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-nav) - 1);
+  background: var(--ground-2);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  clip-path: inset(0 0 100% 0);
+  visibility: hidden;
+  transition:
+    clip-path 0.75s var(--ease-inout),
+    visibility 0s 0.75s;
+}
+
+.overlay::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 60% at 70% 30%, rgba(255, 106, 43, 0.1), transparent 70%);
+}
+
+.overlayOpen {
+  clip-path: inset(0 0 0% 0);
+  visibility: visible;
+  transition: clip-path 0.75s var(--ease-inout);
+}
+
+/* Slow amber scanline drifting down the open overlay */
+.overlayScan {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--signal), transparent);
+  opacity: 0.45;
+  animation: scan 7s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes scan {
+  from {
+    transform: translateY(-1px);
+  }
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+/* Ghost monogram watermark */
+.overlayMark {
+  position: absolute;
+  right: -0.06em;
+  bottom: -0.28em;
+  font-family: var(--font-display);
+  font-size: 46vh;
+  font-weight: 340;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(236, 231, 222, 0.07);
+  pointer-events: none;
+  user-select: none;
+}
+
+.overlayLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: var(--gutter);
+  position: relative;
+}
+
+.overlayLinks li {
+  opacity: 0;
+  transform: translateY(56px) skewY(4deg);
+  transform-origin: left;
+  transition:
+    opacity 0.6s var(--ease-out),
+    transform 0.7s var(--ease-out);
+}
+
+.overlayOpen .overlayLinks li {
+  opacity: 1;
+  transform: none;
+}
+
+.overlayLinks a {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  font-family: var(--font-display);
+  font-weight: 340;
+  font-size: clamp(2.5rem, 12vw, 4rem);
+  letter-spacing: -0.02em;
+  color: var(--bone);
+  transition:
+    color 0.35s var(--ease-out),
+    transform 0.45s var(--ease-out);
+}
+
+.overlayLinks a:hover,
+.overlayLinks a:focus-visible {
+  color: var(--signal);
+  transform: translateX(0.35em);
+}
+
+.overlayIndex {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.1em;
+  color: var(--signal);
+}
+
+/* Contact row pinned to the overlay's bottom edge */
+.overlayFoot {
+  position: absolute;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: max(var(--gutter), env(safe-area-inset-bottom));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bone-dim);
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.6s var(--ease-out),
+    transform 0.6s var(--ease-out);
+}
+
+.overlayOpen .overlayFoot {
+  opacity: 1;
+  transform: none;
+}
+
+.overlayFoot a {
+  color: var(--bone-dim);
+  transition: color 0.3s var(--ease-out);
+}
+
+.overlayFoot a:hover,
+.overlayFoot a:focus-visible {
+  color: var(--signal);
+}
+
+.overlayFootLinks {
+  display: flex;
+  gap: 1.25rem;
+}
+
+@media (min-width: 760px) {
+  .status {
+    display: flex;
+  }
+}
+
+/* Below this width the inline links collapse into the Menu button */
+@media (max-width: 640px) {
+  .desktopNav {
+    display: none;
+  }
+  .menuBtn {
+    display: block;
+  }
+  .status {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav {
+    transition: none;
+  }
+  .nav::after {
+    display: none;
+  }
+  .progress {
+    display: none;
+  }
+  .dot {
+    animation: none;
+  }
+  .menuLabel span {
+    transition: none;
+  }
+  .overlay {
+    clip-path: none;
+    opacity: 0;
+    transition: opacity 0.01s, visibility 0s 0.01s;
+  }
+  .overlayOpen {
+    opacity: 1;
+    transition: opacity 0.01s;
+  }
+  .overlayScan {
+    animation: none;
+    display: none;
+  }
+  .overlayLinks li,
+  .overlayFoot {
+    transition: none;
+  }
+  .overlayLinks a {
+    transition: color 0.3s var(--ease-out);
+  }
+  .overlayLinks a:hover,
+  .overlayLinks a:focus-visible {
+    transform: none;
+  }
+}

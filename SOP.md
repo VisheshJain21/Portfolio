@@ -1,0 +1,256 @@
+# SOP — Vishesh Jain Portfolio
+
+**Standard Operating Procedure & Project Charter**
+Single source of truth for the build. If the chat is lost, start here.
+
+| | |
+|---|---|
+| **Owner** | Vishesh Jain |
+| **Subject** | AI-Native Engineer · fresher (entry-level) |
+| **Goal** | An award-caliber personal portfolio that makes him stand out to land his first role |
+| **Phase** | **P1+ — BUILD (greenlit 2026-07-16).** Content slots for bio/metrics/visuals filled as user provides (INTAKE §A–F). Git still gated — no init/commit until user approves. |
+| **Workspace** | `/Users/vishesh_jain/Vishesh Jain/VJ_Portfolio` (currently empty) |
+| **Last updated** | 2026-07-16 |
+
+---
+
+## 0. Current state (TL;DR)
+
+- ✅ Deep in-browser analysis of 3 reference studios — **done**.
+- ✅ Subject & arena locked — AI-Native Engineer, fresher, competing against other freshers for a first job.
+- ✅ Design direction proposed & visualized — **"Systems that think."**
+- ⬜ **Blocked on 2 inputs before the full build plan locks:** (1) the reference video, (2) Vishesh's real project list.
+- ⬜ Build not started. Starts only on explicit go-ahead.
+
+---
+
+## 1. Operating principles (the rules of this project)
+
+1. **Plan before code.** Front-load research and a reviewed plan. Do not generate large amounts of implementation code until the direction is approved.
+2. **Study the references, never clone them.** Borrow *principles* (craft, restraint, choreography), never their identity, assets, copy, or layout.
+3. **Craft serves substance.** This is a fresher engineer's portfolio, not a studio art-piece. Audience = recruiters/eng-leads scanning fast, often on mobile. Spectacle that buries the work *loses* to a clean, fast site. Win = **one unforgettable signature moment + dead-clear proof of shipped work.**
+4. **The medium is the message.** The site itself should feel built by someone who thinks in AI systems — the interaction *is* the proof of skill.
+5. **Honesty in evidence.** Mark observations **Confirmed** (verified) vs **Inferred** (reasoned). Never present a guess as fact.
+6. **Accessibility & performance are non-negotiable**, not afterthoughts.
+
+---
+
+## 2. Reference intelligence (condensed)
+
+Full report: **[Design Intelligence Report](https://claude.ai/code/artifact/1e13e173-67f6-431f-8473-c56b9fc11ed2)** · analyzed 2026-07-15 via live DOM/runtime inspection.
+
+| Axis | Lusion | Active Theory | Igloo Inc. |
+|---|---|---|---|
+| Framework | Astro | Custom "Hydra" engine | Vanilla Three.js + GSAP + Vite |
+| Rendering | **DOM + WebGL hybrid** | All-WebGL (~73 DOM nodes) | Three.js scene + DOM |
+| Type | Aeonik + IBM Plex/LusionMono | WebGL-textured | Serif + IBM Plex Mono |
+| Palette | Light + ultramarine #0016EC | Black + teal | Ice-grey #A0A5B1 |
+| Preloader | Cropped rolling odometer | Interactive orb "gateway" | ASCII waveform |
+| **Takeaway for us** | **Adopt the architecture** | Admire, borrow the *feel* | Adopt the lean-stack ethos |
+
+**Shared DNA worth adapting:** bespoke asset-gated preloader (never a spinner); restrained base + **one** electric accent; serif/grotesque display + monospace labels; WebGL as centerpiece not wallpaper; virtualized smooth scroll; word/line-split reveals; oversized/cropped numerals; signal-words as content; minimal floating nav.
+
+**Do NOT copy:** any studio's colors/fonts/copy; all-WebGL architecture (kills a11y/SEO); building a custom engine.
+
+---
+
+## 3. Design direction — "Systems that think"
+
+Visualized in the **[Direction Concept board](https://claude.ai/code/artifact/3872f627-d4ee-4b10-9585-97b699e6468e)**. A dark, precise, engineered space where one warm signal marks what matters — the deliberate *opposite* of the references' cold corporate blue. Positioning edge: studios say **"we"**; a portfolio says **"I."**
+
+### 3.1 Color system
+| Token | Hex | Role |
+|---|---|---|
+| `--ground` | `#0A0D13` | Blue-biased near-black (never pure #000) |
+| `--panel` | `#12161F` | Raised surfaces |
+| `--bone` | `#ECE7DE` | Warm off-white text (warm/cool tension) |
+| `--slate` | `#9AA2B0` | Secondary text |
+| `--signal` | `#FF6A2B` | **Molten amber — the ONLY saturated element.** Spent in one place. |
+
+### 3.2 Typography
+- **Display:** high-contrast variable serif (Fraunces-class) — editorial, human, stands out where every other engineer uses a generic tech-sans. Large & sparing.
+- **Utility/label:** monospace — counters, tags, coordinates, "signal words." The engineering foil.
+- **Body:** clean grotesque/sans — long-form legibility, gets out of the way.
+- Fluid scale via `clamp()`. Inline real fonts in the build (don't rely on system fallbacks).
+
+### 3.3 Motion language
+- **Slow in, fast settle.** Expressive ease ≈ `cubic-bezier(0.16, 1, 0.3, 1)`, 0.6–1.2s, generous stagger. Precise, not bouncy.
+- One **choreographed page-load** sequence, then calm. No scattered effects.
+- **Reveal by masking** — lines/words rise from clipped containers; images uncover, not fade.
+- **Reaction, not decoration** — magnetic buttons; a hero the cursor genuinely affects; parallax tied to real depth.
+- Each section earns **one** intentional motion characteristic — no more.
+
+### 3.4 Signature hero
+A cursor-reactive WebGL/canvas **node-graph** evoking a live agentic/orchestration system — signals pulse along edges, nodes respond to the pointer. The interaction demonstrates the skill. (Ambient in the concept board; interactive in the build.) **Final 3D intensity is pending the reference video.**
+
+---
+
+## 4. Information architecture (section-by-section)
+
+Each line = one section + its single intentional motion.
+
+1. **Preloader** — asset-gated; large mono counter + hairline draw; amber ignites at 100% → wipe into hero.
+2. **Hero — the instrument** — cursor-reactive agentic graph behind a masked serif headline stating who he is + one mono coordinate line.
+3. **Manifesto / About** — scroll-pinned statement; words illuminate to bone as they enter. The "I" voice.
+4. **Selected Systems (Work)** — project rows with discipline tags, hover media reveal, magnetic entry, numbered (real ordered selection). **← the section that beats other freshers.**
+5. **Process / Approach** — a real sequence (numbering earns its place); subtle layered parallax.
+6. **Capabilities** — quiet mono marquee/grid of tools & disciplines; ambient motion.
+7. **Contact — final CTA** — amber returns at full strength around one magnetic CTA; closes the loop the preloader opened.
+8. **Footer** — coordinates, socials, colophon in mono; crafted, not an afterthought.
+
+---
+
+## 5. Technical architecture
+
+**Path chosen:** Lusion's hybrid (accessible DOM + layered WebGL), *not* Active Theory's all-WebGL. The only architecture that is simultaneously award-caliber, crawlable, and maintainable by one person.
+
+| Concern | Decision |
+|---|---|
+| Framework | Next.js (App Router) + TypeScript |
+| 3D | React Three Fiber + drei + custom GLSL (not a bespoke engine) |
+| Motion | GSAP + ScrollTrigger; a text-splitting util; Lenis smooth scroll |
+| Styling | Modern CSS + custom-property tokens, fluid `clamp()` scale — no heavy UI kit |
+| Dependency rule | Each dep must beat native CSS / Web Animations / GSAP-you-already-have |
+
+**Responsive** — art-direct, don't shrink. Compose each of 320/375/390/430/768/1024/1280/1440/1920/ultrawide. Touch replaces cursor interactions. WebGL *adapts* (fewer particles, simpler shader, capped DPR) — never simply hidden. `svh/dvh`; guard horizontal overflow everywhere.
+
+**Performance** — 60fps target; single rAF loop; lazy-load 3D + dynamic-import heavy modules; **dispose Three.js geometries/materials/textures on unmount**; watch LCP/INP/CLS; cap DPR; compressed textures, modern image formats, responsive sizes.
+
+**Accessibility** — semantic HTML, logical headings, alt text, keyboard paths, visible focus; `prefers-reduced-motion` strips large movement while keeping all content reachable; a **no-WebGL fallback** (poster/gradient) so weak GPUs still get a complete site.
+
+### 5.1 Folder structure (proposed — clean, modular, non-dev-legible)
+
+```
+VJ_Portfolio/
+├─ README.md              # what this is + how to run (first thing anyone reads)
+├─ SOP.md                 # the master plan (this file)
+├─ docs/                  # planning & reference (non-code)
+├─ public/                # static assets served as-is
+│  ├─ fonts/              # inlined/self-hosted webfonts
+│  ├─ images/             # optimized images (project shots, og)
+│  └─ models/             # 3D assets (.glb / .ktx2)
+└─ src/
+   ├─ app/                # routes only — pages & layouts (Next.js App Router)
+   ├─ components/
+   │  ├─ ui/              # primitives: Button, Cursor, Magnetic, Marquee
+   │  ├─ layout/          # Nav, Footer, Shell
+   │  └─ sections/        # Hero, Work, About, Process, Contact (page sections)
+   ├─ webgl/              # isolated 3D: R3F scenes + shaders
+   │  ├─ scenes/
+   │  └─ shaders/         # .glsl
+   ├─ hooks/              # reusable hooks (useReducedMotion, useScrollProgress…)
+   ├─ animations/         # shared GSAP timelines & reveal primitives (reused everywhere)
+   ├─ lib/                # framework-agnostic utils & config
+   ├─ content/            # DATA/COPY separated from code (projects.ts, bio.ts)
+   └─ styles/             # tokens.css (design system) + globals.css
+```
+
+Principle: **content lives in `content/`, reusable behavior in `hooks/` + `animations/` + `components/ui/`, 3D quarantined in `webgl/`.** A section is assembled from primitives, never hand-rolled twice.
+
+### 5.2 Engineering standards (apply from commit #1)
+
+- **Reuse over duplication** — before writing anything, check `components/ui`, `hooks`, `animations` for an existing primitive to extend/refactor. No copy-paste implementations.
+- **Separation of concerns** — routing (`app/`) ≠ presentation (`components/`) ≠ data (`content/`) ≠ 3D (`webgl/`) ≠ style tokens (`styles/`).
+- **Consistent naming** — `PascalCase` components, `camelCase` functions/vars, `kebab-case` files for non-components, `useX` hooks, `SCREAMING_SNAKE` constants.
+- **Documented & maintainable** — every non-obvious module gets a short header comment; `README.md` kept current.
+- **Production-ready** — typed, linted, no dead code, no console noise, no leaks.
+
+### 5.3 Git workflow (feature-based)
+
+> ⚠️ Confirm exact model against the reference image (IMG_5985.HEIC — was TCC-blocked, not viewed). Proposed default below.
+
+- **`main`** — always deployable, protected. Optional **`develop`** as integration branch if a git-flow structure is preferred.
+- **One short-lived branch per unit of work:** `feature/*`, `fix/*`, `chore/*`, `perf/*` — mapped to the roadmap, e.g. `feature/p2-preloader`, `feature/p4-hero-webgl`.
+- **Conventional Commits:** `feat:`, `fix:`, `refactor:`, `perf:`, `style:`, `docs:`, `chore:`, `test:` — meaningful messages, clean history.
+- **PR per feature** → review → squash-merge to `main`. No direct commits to `main`.
+
+---
+
+## 6. Build roadmap (execute in order; each phase shippable/reviewable)
+
+| Phase | What | Gate |
+|---|---|---|
+| **P0** | Direction & content lock — approve concept; gather real projects, copy, personality | ⬅️ **we are here** |
+| **P1** | Foundation — Next.js+TS, tokens & fluid type, inlined fonts, Lenis, layout shell, a11y + reduced-motion baseline | |
+| **P2** | Load choreography — preloader + page-in sequence + custom cursor + magnetic primitive | |
+| **P3** | Structure — all sections in DOM with scroll reveals (fully usable before any 3D) | |
+| **P4** | WebGL centerpiece — hero instrument in R3F + GLSL, with still-frame & no-GL fallbacks | |
+| **P5** | Responsive art-direction — compose every breakpoint; touch behaviors; overflow pass | |
+| **P6** | Performance — profile LCP/INP/CLS & frame time; lazy-load; dispose; cap DPR; optimize media | |
+| **P7** | Audit & polish — a11y + reduced-motion, cross-browser, console/leak check, final visual sweep | |
+
+**Note on init:** `create-next-app` rejects the capital name `VJ_Portfolio`. When building, init under a temp/lowercase name then move contents in, or set `"name"` manually in `package.json`.
+
+---
+
+## 7. Open inputs / blockers (needed to leave P0)
+
+1. **🎥 Reference video** — `Screen Recording 2026-07-15 at 8.46.17 PM.mov` on the Desktop. macOS TCC blocks this environment from opening `~/Desktop`. **Action (Vishesh):** drag it in Finder into `VJ_Portfolio/`, then it can be studied to calibrate 3D ambition. *(Optional — direction can proceed without it.)*
+2. **📦 Real project list** — 2 provided (more later). Sanitized framing **APPROVED (2026-07-16)** — present abstracted, no Eko/SBI names.
+
+   **⚠️ Sensitivity (must handle):** both are **internal employer (Eko) tools on live banking systems** → confidentiality/NDA + optics risk; `WhatsApp_claw` README also contains **real secrets** (IP, API key, server password) that must never be published (advise user to rotate/remove). Present **sanitized & abstracted**: transferable engineering only, no employer/bank names, no secrets, no "captcha-bypass/PIN-reset" framing. Ideally clear with Eko.
+
+   - **[01] Multi-Channel Notification & Self-Healing Delivery Platform** *(WhatsApp_claw, sanitized)* — production platform delivering bulk notifications to thousands of field agents across **4 independent channels with automatic failover** + a unified delivery-status state machine; an **autonomous "agent team" that monitors, learns from failures, and self-heals stuck jobs**; SMS escalation. Rigor: **948 tests green**, shadow-mode verification, adversarial self-review, rollback plan; deployed as a systemd service behind nginx. Python · FastAPI · Selenium · SQLite · Node. Tags: `agents · python · fastapi · automation · production`. **← flagship, lead with this.**
+   - **[02] Safety-Critical Ops Automation with AI Vision** *(sbi_login_tool, sanitized)* — turns a high-risk, repetitive back-office task on a live enterprise portal into a one-click, fully-audited pipeline; **AI vision reads the captcha, a human supplies only the OTP**. Engineered **fail-closed around a brutal constraint — one attempt, zero retries** (a wrong retry permanently locks the account): stop-on-error with exact reason, exact-match targeting, idempotent skip, screenshot + JSONL compliance audit; auto-resolves the linked support ticket (Zoho Desk). Python · Playwright · LLM-vision · Zoho API. Tags: `ai-vision · playwright · safety-critical · api-integration`.
+   - **[03] OpenClaw — Autonomous Debugger (AI coding agent)** *(GitHub `Autonomous-Debugger-AI-Agent`, PUBLIC/MIT — name freely)* — autonomous engine that detects, fixes & validates code via a **multi-agent LLM pipeline**. Python. **Best public proof of "AI-native" → candidate hero/flagship.** Tags: `agents · llm · python · dev-tools`.
+   - **[04] NEXUS — Enterprise Workforce Intelligence Platform** *(GitHub `enterprise-workforce-intelligence-platform`, PUBLIC, live demo on Vercel)* — full-stack: AI insights, real-time WebSocket, JWT auth, PHP 8.2 backend, Docker Compose. Shows breadth. Tags: `full-stack · websocket · auth · docker`.
+   - **Overflow (not featured cards):** ChatBot, Recommendation-System, Weather_App, Face_Recognition, Tic-Tac-Toe, + 2024 security-intern tasks (Caesar_Cipher, Password_Complexity_Checker, Image_Encryption, Keylogger) → aggregate under a "More on GitHub →" link.
+   - **Proposed site order** (strongest first, alternating public/sanitized): **OpenClaw → [01] Delivery Platform → NEXUS → [02] Safety-Critical Tool.** Full detail per project still needed — see `INTAKE.md` §C.
+3. **📇 Contact & identity (provided 2026-07-16 — content for Contact section + footer)**
+   - Email: `visheshjain353@gmail.com`
+   - LinkedIn: `linkedin.com/in/vishesh-jain-2aaa49297`
+   - GitHub: `github.com/VisheshJain21`
+   - Instagram: `instagram.com/vishesh_353` *(personal — optional on a pro portfolio; user to decide)*
+   - Phone: `6262444559` — ⚠️ **recommend NOT publishing raw** on a public site (bot scraping/spam). Prefer email + LinkedIn + GitHub as primary CTAs; keep the number to a downloadable résumé or a contact form. **User to confirm.**
+
+---
+
+## 8. Decision log
+
+| Date | Decision |
+|---|---|
+| 2026-07-15 | Pause build; do exhaustive reference analysis first. |
+| 2026-07-15 | Confirmed reference tech (Astro / Hydra / vanilla Three+GSAP). |
+| 2026-07-16 | Subject = AI-Native Engineer, fresher. Arena = beating other freshers for a first role. |
+| 2026-07-16 | Direction = "Systems that think" — dark + molten-amber, serif display + mono, hybrid DOM+WebGL, agentic-graph hero. |
+| 2026-07-16 | Deleted stray `vj-portfolio` boilerplate scaffold; build will start clean inside `VJ_Portfolio`. |
+| 2026-07-16 | Adopted engineering standards: modular folder structure (§5.1), reuse-over-duplication, feature-based git workflow with Conventional Commits (§5.3). |
+| 2026-07-16 | Created `CLAUDE.md` = concise read-first dev reference (auto-loaded each session); this SOP remains the full charter. Keep both in sync. |
+| 2026-07-16 | Studied first 2 real projects (WhatsApp_claw, sbi_login_tool). Flagged as confidential Eko/banking work → will present sanitized/abstracted; drafted case-study framings (§7.2). Secrets found in a README — user to rotate/remove. |
+| 2026-07-16 | User APPROVED sanitized/abstracted framing for both employer projects (no Eko/SBI names). Additional personal/non-employer projects to follow. |
+| 2026-07-16 | Scanned public GitHub. Added 2 nameable projects — OpenClaw (Autonomous Debugger, AI multi-agent) + NEXUS (full-stack platform). Proposed 4-card set (2 public + 2 sanitized), OpenClaw as public flagship. Created `INTAKE.md` (A–Z content/asset/decision checklist to leave P0). |
+| 2026-07-16 | **BUILD GREENLIT** ("start the build now") — P1 begins; user supplies INTAKE content later, slots marked TODO. Git init still withheld per user's earlier instruction. Hero ships as cursor-reactive canvas agentic-graph first (performant everywhere); R3F/GLSL upgrade parked at P4.5 pending the reference video. |
+| 2026-07-16 | **P1–P4 built & running** (Next 16 + TS, tokens, Fraunces/Instrument/JetBrains, Lenis, preloader, cursor, magnetic, all 8 sections, agentic-graph hero). Fixed during audit: nested-anchor hydration bug (stretched-link pattern) + preloader hidden-tab rAF freeze (timeout failsafe). Verified: console clean, no server errors, zero overflow @375px. Roadmap P2–P4 gates ✅; P5–P7 visual pass pending on user's screen. |
+| 2026-07-17 | **Fix Prompt v2 Part 1 (bug regression pass).** Bug A ("3D disappears after scroll away/back" + circular-JSON dev error): canvas already persistent/single (earlier fix); NEW — (a) `ResumeKick` inside Canvas calls `invalidate()` whenever `paused` flips false (frameloop "never"→"always" resume insurance — the frozen-last-frame classic); (b) purged live Three objects from JSX props (drei `Line points` Vector3s → plain tuples; `WarpFXDriver baseCA` Vector2 → `{x,y}`) — Three objects have circular parent/child refs and choke dev-overlay serialization ("Converting circular structure to JSON"). Bug B ("navbar doesn't appear on hover"): only reveal path was scroll-up, and any in-header hover zone translates away WITH the header — added always-present fixed `hoverTrigger` strip (28px, top, z = nav−1 so the visible header covers it; exposed only when nav hidden; pointerenter → reverse hide tween). tsc clean. Live verify pending on user's Safari (Chrome ext not installed; Browser-pane MCP gone). Part 2 checkpoint queued: already have persistent canvas/scroll-driven 3D/Lenis/cursor/overlay-nav — genuinely new = shader-distorted project image planes, full-page background canvas, shared-element case-study transitions. |
+| 2026-07-17 | **"Not responsive" report investigated — root cause was a JS crash, not CSS.** Browser MCP tool had disconnected this session (env notice), so investigated via `gh`-less means: dev server's own log (`.next/dev/logs/*.log`). Found a genuine **uncaught error repeating 3+ times**: `TypeError: Converting circular structure to JSON`, thrown from `performWorkUntilDeadline` (React's concurrent scheduler) deep inside the R3F reconciler while rendering `HeroScene`. Key finding: this class of error is thrown OUTSIDE any component's render call stack, so React `ErrorBoundary` structurally cannot catch it — a real, previously-unknown gap in the resilience architecture. Ran `next build`: compiled clean with zero errors, strongly indicating this is a **dev-only Turbopack Fast-Refresh artifact** (HMR live-swaps `extend()`-registered material class identity on every hot-reloaded module — R3F's reconciler then tries to diff/stringify a live, circular-parented Three.js object) rather than a shipped-product bug — consistent with the sheer amount of live file-editing this session. Reframed for user: "not responsive" most likely meant the page froze/stopped responding to input at the moment of the crash, not that CSS breakpoints broke. **Hardened both canvases regardless**: added a narrowly-scoped global `window.onerror`/`unhandledrejection` net to `HeroSceneGate` AND `WorkThumbsGate` (matches only the circular-structure + react-three-fiber signature, so unrelated app errors pass through) that degrades to the static/DOM fallback instead of leaving the page inert. Verified: tsc clean, `next build` clean after the change. |
+| 2026-07-17 | **Prompt v3 Option B implemented — steps 1–7 of 9, checkpoint held per user instruction.** Second, fully separate `<Canvas>` (`webgl/work/WorkThumbsGate.tsx`) mirrors the Hero's proven Bug-A pattern exactly: mounts once, never unmounted, pauses via IO+`frameloop="never"` when `#work` off-screen, `ResumeKick` invalidates on resume — but NO postprocessing composer (Option B choice), so nothing bleeds onto thumbnails and no ClearGuard is needed. 4 `DistortedImagePlane`s (shared `PlaneGeometry`, per-instance `imageShaderMaterial`) ripple toward a lerped, gaussian-falloff cursor position; DOM↔canvas sync via per-frame `getBoundingClientRect()` (no scroll/resize listeners — simpler & always-correct). Touch: one-shot tap ripple (self-decaying) instead of hover-follow. Placeholder textures: 4 clearly-labeled branded-gradient SVGs at `public/images/work/placeholder-project-*.svg`, wired via new `Project.thumb` field with `TODO(vishesh)` comments — swap is a pure asset replacement. Each Work row got a `.thumb` DOM slot (hidden <640px) with a plain `<img>` underneath as the accessibility/no-JS/broken-texture fallback. **Verified in-browser** (not just tsc): 2 canvases total (no leak), textures loaded, zero WebGL errors through a real hover interaction, **Bug-A regression re-confirmed** (scroll #work→#contact→back to hero: canvas persists, context not lost, count stays 2), **nav click-through confirmed unobstructed** by the new fixed pointer-events:none layer (`elementFromPoint` at the nav link returns the link's own content, not the canvas). Debugging note: `readPixels` on the WebGL canvas returned all-zero — false alarm, `preserveDrawingBuffer:false` (default) clears the backbuffer after compositor swap, so reading it outside the render callback is meaningless; verified via GL-error-queue-draining instead. Steps 8–9 (dedicated touch/broken-image verification passes) intentionally NOT started — code for both exists already (built into the initial scaffold) but is unverified; holding at user's explicit checkpoint. |
+| 2026-07-17 | **Loader rebuilt to Lusion *mechanic*** (interaction pattern only — no copied name/copy/assets). Removed the progress bar; now pure-#000 screen with a single bottom-left % counter (~9vh, display font), counting 0→100 in **uneven decelerating steps** (still asset-gated: plateaus ≤92 until fonts+load ready). Exit <~450ms: counter fades → centered "VJ" pops → **flies+scales to the nav wordmark's measured `[data-brand]` rect** (top-left) → black clears onto the interactive hero. **Canvas-pause sequencing:** new `hooks/useSiteReady` — both HeroSceneGate & WorkThumbsGate now `paused = !siteReady || !inView`, so WebGL stays `frameloop="never"` behind the black loader; `signalSiteReady()` fires at exit start → gates flip → their ResumeKick calls `invalidate()`. Transform/opacity only; reduced-motion straight cut; session-gated. Verified: tsc clean, dev serves 200, SSR HTML confirms counter + `>VJ<` + `data-brand` present & old bar gone. ⚠️ Browser preview MCP unavailable this session → **live visual pass (counter feel, VJ fly, scroll-away/back canvas survival) still pending user confirmation.** |
+| 2026-07-17 | **Portrait added** (`public/images/about/portrait.jpg`, user-supplied, moved from project root + renamed) — `About.tsx` `HAS_PORTRAIT` flag flipped true; duotone→color hover treatment. **Debugging note:** hit a false alarm — page looked frozen/blank with `[ portrait ]` still showing after the edit. Root cause was NOT the code: Turbopack's dev-cache DB was corrupted (`ArrayLengthMismatch` panics in `preview_logs`, server kept returning 200 while broken). `rm -rf .next/cache/turbopack` (old dev script) wasn't enough — needed full `rm -rf .next`. **`package.json` dev script updated to `rm -rf .next && next dev`** so this can't silently recur. Lesson: if a code change verifiably lands (confirmed in source) but the browser won't show it and screenshots go blank, suspect a corrupted `.next` before the component. |
+| 2026-07-17 | **Smudge bug fixed + monogram swap.** (1) User-reported "3D globe smudging until reload": postprocessing composer sets `gl.autoClear=false`; when the bloom-drop resilience path unmounts the composer mid-session nothing restored clearing → frames accumulate = smear. Fix: `ClearGuard` in HeroScene (autoClear=true + clear() whenever composer inactive). Verified live on :53466 preview instance — scroll-away/back (Bug A) passes, scene animating, console clean. (2) Loader initials → **VJMark** interlocked V·J SVG (ORIGINAL redraw; user's reference was watermarked Scalebranding stock → not embedded, licensing flagged). Same portal choreography (pop entry replaces split-chars; glitch ghosts = stacked SVG copies); favicon matched. Verified behaviorally: session flag written only by completed exit-sequence → confirmed full run after gate clear. |
+| 2026-07-17 | **Overhaul piece #1 — "VJ portal" preloader** (from user's overhaul prompt; aesthetic mapped to OUR amber/serif system per its constraint #6, not the prompt's green/cyan terminal look). Bar: gradient fill (bone→signal-soft tip) + subtle glow pulse. At 100%: ignite → loading UI snaps out (200ms) → **V/J split-entry from opposite sides w/ back.out overshoot + rotation**, shockwave ring, **RGB-split glitch flicker** (CSS keyframes on data-char pseudo-elements) → `signalSiteReady` → **wrap scales ×28 past viewport while bg layer crossfades out** = portal into the already-animating hero (~1.8s total). **Session-gated** (`sessionStorage vj:preloaded` — once per visit; new tab or clear to replay). Transforms/opacity only; reduced-motion → instant skip; hidden-tab failsafe kept. tsc clean; visual preview pending user (browser MCP still disconnected). Pieces 2–5 of the prompt: large parts already exist (reveals, magnetic, cursor, timeline, stack grid, node hero) — do NOT rebuild; remaining new items: hero rotating typed line, copy-email + local-time in footer, optional CLI easter egg / heading glitch. |
+| 2026-07-16 | **3 fixes + Instagram.** (1) Preloader → Lusion-style: wide bold bar (2px→~10px, ~760px), live 0–100% counter (real load-gated, unchanged), "Loading" + counter now in hero display type; reveal untouched. (2) Work hover bug — hover was on `.rowLink` (only projects WITH a link = 01,03 = odd → "alternating"); moved to `.row` so all 4 react identically + gave "More on GitHub" the same hover + confidential rows a `data-cursor-view="Confidential"`. (3) Built `ui/Icon` (first icon set — none existed) and applied magnetic (reused `Magnetic`) icon links to LinkedIn/phone/résumé (+GitHub/Instagram) in Contact; mail icon on the CTA. **Instagram added** (was deferred) → contact data + Contact channels + Footer + mobile-menu foot. Phone now published as `tel:` per explicit user request (overrides earlier privacy hold). Résumé links `/vishesh-jain-resume.pdf` — user must drop the PDF in `public/`. Verified: `tsc --noEmit` clean (browser MCP was disconnected → no screenshot this pass). |
+| 2026-07-16 | **"Warp Cut" signature nav transition built** (user-specced): singleton GSAP timeline (~950ms, expo/back eases) — Impact (shock ring from click point + warpFX spike surging hero CA/grain, decayed per-frame in-scene) → kinetic destination type (per-char split, back.out overshoot, rotation/skew) while `main` is sucked away (transform/opacity only) → turbulent **liquid wipe** (shared `#warp-turb` feTurbulence+feDisplacementMap SVG filter on an oversized panel; `lenis.scrollTo(immediate,force)` snaps under full cover, main reset) → landing (type slams into the clicked label's position, amber **pill indicator** morphs between links — also scroll-tracked, section reveals fire via ScrollTrigger.update, focus moves to target heading). Kill-safe restart on double-click; scroll locked via `lenis.stop()` only (no scrollbar flash); reduced-motion → fast crossfade + instant scroll; ring+spike gated on `warpFX.gpuTier` (published by HeroSceneGate). New: `lib/lenis-store`, `lib/warp-fx`, `ui/WarpCut`, `animations/warp-cut`; Nav intercepts all 4 links (desktop + mobile overlay), keyboard rides the same click path, `[data-warp]`/`[data-warp-hold]` freeze-dim states. |
+| 2026-07-16 | **Lusion-clone technique batch** (user: "make it like Lusion clone, stop caveating"). Added: hero postprocessing **chromatic aberration + Noise film-grain** (on top of bloom/vignette, desktop-only, drops with bloom under GPU pressure); custom-cursor **"VIEW" state** (`data-cursor-view` → filled amber disc + label, wired to the 2 clickable project rows); **sticky footer reveal** (fixed footer measured into `--footer-h`, `main` on opaque ground reserves that height so content lifts to uncover it; static under reduced-motion). Verified: no console/server errors, footer fixed+measured (118px), main reserves it, zero overflow, hero at top. Still TODO toward fuller clone: WebGL image-distortion on project hover (needs real project images), horizontal-scroll gallery, page/section curtain transitions. |
+| 2026-07-16 | **"Make it 3D like Lusion + responsive" pass.** Hero upgraded: rigid icosahedron → **MeshDistortMaterial molten core** (organic liquid-metal wobble) + wireframe shell, **drei Sparkles** atmosphere, more nodes, and **scroll-driven camera** (dolly-out + lift + field tilt/spread as you descend — the key cinematic "Lusion" move). Responsive fixes found on mobile: nav links overflowed → built a **Menu button + full-screen serif overlay** (≤640px, Esc-close, amber index nums); 3D core swamped full-width copy → mobile camera pulled back + a **readability scrim** between canvas and text. Verified: no console errors, zero overflow @375, single canvas, menu works. Honest caveat to user: not a literal Lusion clone (their custom engine/team); heavier 3D raises perf cost but resilience layer (pause/recover/bloom-drop) protects it. |
+| 2026-07-16 | **Bug: "why it disappears"** — user saw the WebGL hero vanish to just the glow on their real machine (Safari, with heavy Lusion WebGL open in another tab). Root cause: (a) IntersectionObserver was UNMOUNTING/remounting the R3F canvas on scroll → churned through the browser's limited WebGL-context pool → context loss; (b) on loss the code fell to static PERMANENTLY. Fix: canvas now mounts once & only PAUSES (frameloop none) off-screen; a static glow always sits behind so it degrades to a glow not a void; real context-lost→preventDefault+drop bloom, context-restored→remount(key); permanent static only after 3 losses. Verified by force-losing the context via WEBGL_lose_context: recovered (isContextLost false), stayed 1 canvas, no errors. |
+| 2026-07-16 | **Element-gap pass** vs. reference AI-engineer portfolio (coffee-doge-66115487.figma.site). Added 4 missing element TYPES in our own dark/amber/serif system (not their purple/emoji/% look): **About** (bio + fact chips + portrait slot), **Experience** vertical timeline, categorized **Tech Stack** (grouped + subtle depth bars, no loud numbers), **Contact form** (mailto-powered, no backend). Reordered sections; nav now About/Work/Experience/Contact. Verified each visually + zero console errors + zero overflow @1280. Content marked TODO(vishesh) pending INTAKE §B/§D. |
+| 2026-07-16 | **User feedback: "maza nhi aaya"** (not impressed) → all 4 gaps flagged (visual punch, motion, feels-empty, not distinctive) + user chose "go bigger" on 3D. **P4.5 executed same session**: real WebGL hero (Three.js/R3F/postprocessing) — icosahedron core + orbiting instanced agent nodes + amber signal pulses along edges + Bloom/Vignette + cursor-parallax camera rig, replacing the flat 2D canvas. Added new **Proof** section (huge stat band: 04 systems / 948 tests / 4× channels / 0 retries) between Manifesto and Work for distinctiveness + substance. Deepened hero glow, bolder Work-row hover (glow + title shift), bumped --step-5 scale. **Bug found & fixed**: `THREE.WebGLRenderer: Context Lost` under heavy Bloom(mipmapBlur)+dpr2 — fixed via lighter GPU budget (dpr cap 1.5, mipmapBlur removed, fewer instances) + real context-lost/restored handling + ErrorBoundary, all falling back to the static CSS glow instead of a blank canvas. Deleted superseded `HeroGraph.tsx` (dead code). New reusable primitive: `components/ui/ErrorBoundary.tsx`. |
+
+---
+
+## 9. Asset index
+
+- **Design Intelligence Report** (reference analysis)
+  - Local: `docs/01-design-intelligence-report.html` (double-click to open, self-contained)
+  - Hosted: https://claude.ai/code/artifact/1e13e173-67f6-431f-8473-c56b9fc11ed2
+- **Direction Concept board** (look & feel)
+  - Local: `docs/02-direction-concept.html` (double-click to open, self-contained)
+  - Hosted: https://claude.ai/code/artifact/3872f627-d4ee-4b10-9585-97b699e6468e
+- **Persistent memory:** `~/.claude/projects/-Users-vishesh-jain-Vishesh-Jain-VJ-Portfolio/memory/` (`portfolio-project.md`, `research-before-building.md`)
+- **Real projects:** `~/Vishesh Jain/{WhatsApp_claw, Calling_claw, Finance_aahad, sbi_login_tool, transaction_download, claw}`
+
+---
+
+## 10. Next action
+
+Provide the **project list** (§7.2) and, optionally, the **video** (§7.1). Then the section-by-section build plan locks and, on your go-ahead, **P1 begins**.

@@ -1,0 +1,56 @@
+/* ============================================================
+   Design tokens — "Systems that think"
+   Blue-biased near-black ground · warm bone ink · one molten-
+   amber signal. All visual decisions derive from these tokens.
+   (SOP §3 — do not hardcode colors/sizes in components.)
+   ============================================================ */
+
+:root {
+  /* — Color — */
+  --ground: #0a0d13;
+  --ground-2: #0d1119;
+  --panel: #12161f;
+  --panel-2: #171c27;
+  --bone: #ece7de;
+  --bone-dim: #9aa2b0;
+  --bone-faint: #5e6674;
+  --line: rgba(236, 231, 222, 0.1);
+  --line-strong: rgba(236, 231, 222, 0.22);
+  --signal: #ff6a2b;
+  --signal-soft: #ff8b57;
+  --glow: rgba(255, 106, 43, 0.16);
+
+  /* — Type families (populated by next/font in layout.tsx) — */
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-instrument), -apple-system, BlinkMacSystemFont,
+    "Segoe UI", system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), "SF Mono", ui-monospace, Menlo, monospace;
+
+  /* — Fluid type scale (min @360px → max @1600px) — */
+  --step--1: clamp(0.72rem, 0.68rem + 0.18vw, 0.85rem);
+  --step-0: clamp(0.95rem, 0.9rem + 0.22vw, 1.08rem);
+  --step-1: clamp(1.15rem, 1.05rem + 0.5vw, 1.45rem);
+  --step-2: clamp(1.5rem, 1.25rem + 1.2vw, 2.3rem);
+  --step-3: clamp(2rem, 1.5rem + 2.6vw, 3.6rem);
+  --step-4: clamp(2.8rem, 1.7rem + 5.4vw, 6.2rem);
+  --step-5: clamp(3.6rem, 1rem + 13vw, 11.5rem);
+
+  /* — Rhythm — */
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --section-y: clamp(5.5rem, 12vw, 11rem);
+  --maxw: 1560px;
+
+  /* — Motion — */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-inout: cubic-bezier(0.76, 0, 0.24, 1);
+  --dur-quick: 0.45s;
+  --dur-base: 0.8s;
+  --dur-slow: 1.2s;
+
+  /* — Z layers — */
+  --z-canvas: 1;
+  --z-content: 5;
+  --z-nav: 40;
+  --z-cursor: 80;
+  --z-preloader: 100;
+}

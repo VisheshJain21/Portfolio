@@ -1,0 +1,119 @@
+.section {
+  border-top: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.heading {
+  font-size: var(--step-4);
+  margin-top: 1.4rem;
+}
+
+.grid {
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+
+.group {
+  background: var(--ground);
+  padding: clamp(1.4rem, 3vw, 2rem);
+}
+
+.groupTitle {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--signal);
+  margin-bottom: 1.4rem;
+}
+
+.skills {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.skill {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skillName {
+  font-size: var(--step-0);
+  color: var(--bone);
+}
+
+.bar {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--panel-2);
+  overflow: hidden;
+}
+
+.barFill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, var(--signal), var(--signal-soft));
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.rows {
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  display: grid;
+  gap: 1rem;
+  border-block: 1px solid var(--line);
+  padding-block: 1rem;
+}
+
+.marquee {
+  overflow: hidden;
+  white-space: nowrap;
+  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+
+.track {
+  display: inline-flex;
+  animation: scroll 34s linear infinite;
+}
+
+.reverse {
+  animation-direction: reverse;
+}
+
+.mItem {
+  font-family: var(--font-mono);
+  font-size: var(--step-0);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+  display: inline-flex;
+  align-items: center;
+}
+
+.sep {
+  color: var(--signal);
+  margin-inline: 1.4rem;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track {
+    animation: none;
+  }
+}

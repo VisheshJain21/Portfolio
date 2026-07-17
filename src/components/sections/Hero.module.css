@@ -1,0 +1,120 @@
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  background: radial-gradient(120% 90% at 78% 46%, rgba(255, 106, 43, 0.05), transparent 65%);
+}
+
+/* Readability scrim between the 3D canvas and the copy.
+   Desktop: darkens the left (text) and fades toward the core on the right.
+   Mobile: full vertical darkening so full-width copy stays legible over the core. */
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    var(--ground) 0%,
+    rgba(10, 13, 19, 0.72) 30%,
+    rgba(10, 13, 19, 0.2) 52%,
+    transparent 66%
+  );
+}
+
+.inner {
+  position: relative;
+  z-index: var(--z-content);
+  padding-block: clamp(6rem, 14vh, 9rem) clamp(4rem, 10vh, 6rem);
+  max-width: min(100%, 1560px);
+}
+
+.title {
+  font-size: var(--step-5);
+  color: var(--bone);
+  margin-top: 1.6rem;
+  text-shadow: 0 0 90px rgba(255, 106, 43, 0.16);
+}
+
+.sub {
+  margin-top: 1.9rem;
+  max-width: 44ch;
+  font-size: var(--step-1);
+  color: var(--bone-dim);
+  line-height: 1.55;
+}
+
+.coords {
+  margin-top: 2.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 3rem;
+}
+
+.coords dt {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+  margin-bottom: 0.3rem;
+}
+
+.coords dd {
+  font-size: var(--step-0);
+  color: var(--bone);
+}
+
+.scrollcue {
+  position: absolute;
+  bottom: 1.6rem;
+  left: var(--gutter);
+  z-index: var(--z-content);
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+}
+
+.scrollbar {
+  width: 42px;
+  height: 1px;
+  background: var(--line-strong);
+  position: relative;
+  overflow: hidden;
+}
+
+.scrollbar::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: var(--signal);
+  animation: scan 2.6s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+
+@keyframes scan {
+  0% {
+    transform: translateX(-110%);
+  }
+  100% {
+    transform: translateX(270%);
+  }
+}
+
+@media (max-width: 860px) {
+  .scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(10, 13, 19, 0.6) 0%,
+      rgba(10, 13, 19, 0.35) 45%,
+      rgba(10, 13, 19, 0.8) 100%
+    );
+  }
+}

@@ -1,0 +1,294 @@
+<title>Portfolio Direction — Vishesh Jain, AI-Native Engineer</title>
+<style>
+  :root {
+    --ground: #0A0D13;
+    --ground-2: #0D1119;
+    --panel: #12161F;
+    --panel-2: #171C27;
+    --bone: #ECE7DE;
+    --bone-dim: #9AA2B0;
+    --bone-faint: #5E6674;
+    --line: rgba(236, 231, 222, 0.11);
+    --line-strong: rgba(236, 231, 222, 0.24);
+    --signal: #FF6A2B;
+    --signal-soft: #FF8B57;
+    --glow: rgba(255, 106, 43, 0.18);
+
+    --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Arial, sans-serif;
+    --mono: "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--ground);
+    color: var(--bone);
+    font-family: var(--sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--signal); color: var(--ground); }
+
+  .grain { position: fixed; inset: 0; z-index: 90; pointer-events: none; opacity: 0.045; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .vignette { position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background: radial-gradient(130% 100% at 70% 0%, transparent 45%, rgba(0,0,0,0.6) 100%); }
+
+  .wrap { max-width: 1400px; margin: 0 auto; padding: 0 clamp(1.1rem, 4vw, 3.2rem); position: relative; z-index: 3; }
+
+  /* ---- Nav ---- */
+  nav {
+    position: relative; z-index: 20;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 0; border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bone-dim);
+  }
+  nav .brand { color: var(--bone); font-weight: 600; }
+  nav .status { display: none; align-items: center; gap: 0.5rem; }
+  nav .status .live { width: 6px; height: 6px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 10px 1px var(--glow); animation: blink 2.4s ease-in-out infinite; }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+  nav .links { display: flex; gap: 1.6rem; }
+  nav .links span:hover { color: var(--signal); cursor: default; }
+  @media (min-width: 720px) { nav .status { display: flex; } }
+
+  /* ---- Hero ---- */
+  .hero { position: relative; min-height: clamp(560px, 86vh, 900px); display: flex; align-items: center; }
+  #graph { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+  .hero-inner { position: relative; z-index: 4; padding: 3rem 0; max-width: 900px; }
+  .eyebrow { font-family: var(--mono); font-size: clamp(10px, 1.4vw, 12px); letter-spacing: 0.28em; text-transform: uppercase; color: var(--signal); display: flex; align-items: center; gap: 0.7rem; margin-bottom: 1.6rem; }
+  .eyebrow::before { content: ""; width: clamp(24px, 5vw, 52px); height: 1px; background: var(--signal); display: inline-block; }
+  h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(3rem, 11vw, 8.5rem); line-height: 0.9; letter-spacing: -0.03em; text-wrap: balance; }
+  h1 em { font-style: italic; color: var(--bone-dim); }
+  .hero p.sub { margin-top: 1.8rem; max-width: 42ch; font-size: clamp(1rem, 2.2vw, 1.3rem); color: var(--bone-dim); line-height: 1.5; }
+  .coords { margin-top: 2.4rem; display: flex; flex-wrap: wrap; gap: 0.6rem 2rem; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; color: var(--bone-faint); text-transform: uppercase; }
+  .coords b { color: var(--bone); font-weight: 500; }
+  .scrollcue { position: absolute; bottom: 1.4rem; left: 0; z-index: 4; font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; color: var(--bone-faint); text-transform: uppercase; display: flex; align-items: center; gap: 0.6rem; }
+  .scrollcue .bar { width: 40px; height: 1px; background: var(--line-strong); position: relative; overflow: hidden; }
+  .scrollcue .bar::after { content: ""; position: absolute; inset: 0; width: 40%; background: var(--signal); animation: slide 2.6s var(--ease) infinite; }
+  @keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(260%); } }
+
+  /* ---- Readout strip ---- */
+  .readout { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .readout .cell { background: var(--ground); padding: 1.3rem clamp(1.1rem, 3vw, 2rem); }
+  .readout dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--bone-faint); margin-bottom: 0.5rem; }
+  .readout dd { font-family: var(--serif); font-size: 1.25rem; letter-spacing: -0.01em; }
+  .readout dd small { font-family: var(--sans); font-size: 0.8rem; color: var(--bone-dim); display: block; margin-top: 0.2rem; letter-spacing: 0; }
+
+  /* ---- Work ---- */
+  .work { padding: clamp(4rem, 10vw, 8rem) 0 3rem; }
+  .work-head { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 1rem; border-bottom: 1px solid var(--line-strong); padding-bottom: 1.4rem; margin-bottom: 0.5rem; }
+  .work-head h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.8rem, 5vw, 3.2rem); letter-spacing: -0.02em; }
+  .work-head .meta { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bone-dim); }
+
+  .proj { display: grid; grid-template-columns: 54px 1fr auto; gap: clamp(1rem, 3vw, 2.5rem); align-items: center; padding: clamp(1.4rem, 3vw, 2.4rem) 0.4rem; border-bottom: 1px solid var(--line); transition: padding-left 0.5s var(--ease), background 0.5s var(--ease); cursor: default; }
+  .proj:hover { padding-left: 1.4rem; background: linear-gradient(90deg, var(--panel), transparent 80%); }
+  .proj .idx { font-family: var(--mono); font-size: 12px; color: var(--signal); letter-spacing: 0.1em; }
+  .proj .body h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.5rem, 4vw, 2.6rem); letter-spacing: -0.015em; line-height: 1.05; transition: color 0.4s var(--ease); }
+  .proj:hover .body h3 { color: var(--signal-soft); }
+  .proj .body .desc { color: var(--bone-dim); font-size: 0.95rem; margin-top: 0.5rem; max-width: 52ch; }
+  .proj .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.9rem; }
+  .proj .tags span { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bone-dim); border: 1px solid var(--line-strong); border-radius: 3px; padding: 0.2em 0.5em; }
+  .proj .arrow { font-family: var(--mono); color: var(--bone-faint); font-size: 1.3rem; transition: transform 0.5s var(--ease), color 0.4s var(--ease); }
+  .proj:hover .arrow { transform: translate(6px, -6px); color: var(--signal); }
+  .proj .ph { font-family: var(--mono); font-size: 8px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bone-faint); vertical-align: super; margin-left: 0.5em; border: 1px dashed var(--line-strong); padding: 0.1em 0.35em; border-radius: 2px; }
+  @media (max-width: 640px) {
+    .proj { grid-template-columns: 32px 1fr; }
+    .proj .arrow { display: none; }
+  }
+
+  /* ---- Direction note ---- */
+  .note { margin: 2rem 0 4rem; border: 1px solid var(--line-strong); border-left: 2px solid var(--signal); background: var(--panel); border-radius: 0 5px 5px 0; padding: 1.3rem 1.5rem; }
+  .note .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--signal); display: block; margin-bottom: 0.6rem; }
+  .note p { color: var(--bone-dim); font-size: 0.92rem; max-width: 74ch; }
+  .note p + p { margin-top: 0.5rem; }
+  .note b { color: var(--bone); font-weight: 600; }
+
+  @media (prefers-reduced-motion: reduce) {
+    nav .status .live, .scrollcue .bar::after { animation: none !important; }
+  }
+</style>
+
+<div class="grain"></div>
+<div class="vignette"></div>
+
+<div class="wrap">
+  <nav>
+    <span class="brand">Vishesh&nbsp;Jain</span>
+    <span class="status"><span class="live"></span> Available — 2026</span>
+    <span class="links"><span>Work</span><span>About</span><span>Contact</span><span>Index</span></span>
+  </nav>
+
+  <section class="hero">
+    <canvas id="graph" aria-hidden="true"></canvas>
+    <div class="hero-inner">
+      <div class="eyebrow">AI-Native Engineer · Portfolio v1</div>
+      <h1>Systems<br>that <em>think.</em></h1>
+      <p class="sub">I design and build software where the intelligence isn't bolted on — it's the architecture. Agents, automation, and interfaces that reason.</p>
+      <div class="coords">
+        <span>Role — <b>AI-Native Engineer</b></span>
+        <span>Status — <b>Fresher, open to roles</b></span>
+        <span>Based — <b>India</b></span>
+      </div>
+    </div>
+    <div class="scrollcue"><span class="bar"></span> Scroll to explore</div>
+  </section>
+
+  <dl class="readout">
+    <div class="cell"><dt>Focus</dt><dd>Agentic systems<small>LLM orchestration &amp; tooling</small></dd></div>
+    <div class="cell"><dt>Builds with</dt><dd>Python · TS<small>and whatever the problem needs</small></dd></div>
+    <div class="cell"><dt>Signature</dt><dd>Autonomy<small>systems that run themselves</small></dd></div>
+    <div class="cell"><dt>Currently</dt><dd>Shipping<small>real projects, not toy demos</small></dd></div>
+  </dl>
+
+  <section class="work">
+    <div class="work-head">
+      <h2>Selected Systems</h2>
+      <span class="meta">04 / built &amp; shipped</span>
+    </div>
+
+    <div class="proj">
+      <span class="idx">01</span>
+      <div class="body">
+        <h3>Autonomous Debugger <span class="ph">Your project</span></h3>
+        <p class="desc">An agent that reads a failing codebase, forms hypotheses, and fixes bugs end-to-end without a human in the loop.</p>
+        <div class="tags"><span>agents</span><span>python</span><span>llm</span><span>tooling</span></div>
+      </div>
+      <span class="arrow">↗</span>
+    </div>
+
+    <div class="proj">
+      <span class="idx">02</span>
+      <div class="body">
+        <h3>KO&nbsp;Claw <span class="ph">Your project</span></h3>
+        <p class="desc">One line describing what it does, the hard part you solved, and the outcome — swapped in from your real work.</p>
+        <div class="tags"><span>automation</span><span>systems</span><span>real-time</span></div>
+      </div>
+      <span class="arrow">↗</span>
+    </div>
+
+    <div class="proj">
+      <span class="idx">03</span>
+      <div class="body">
+        <h3>ML / IoT Pipeline <span class="ph">Your project</span></h3>
+        <p class="desc">Edge sensing to model inference — the kind of full-stack systems thinking recruiters can't teach and can't ignore.</p>
+        <div class="tags"><span>ml</span><span>iot</span><span>edge</span><span>data</span></div>
+      </div>
+      <span class="arrow">↗</span>
+    </div>
+  </section>
+
+  <div class="note">
+    <span class="lbl">◈ Direction concept — for your approval</span>
+    <p>This is a <b>look-and-feel board</b>, not the finished site. Copy and projects are <b>placeholders</b> — they get replaced with your real work. The hero animation here is <b>ambient</b>; in the real build the node-graph <b>reacts to the cursor</b>, so the interaction itself demonstrates you build responsive intelligent systems.</p>
+    <p>The bet: dark, precise, one molten-amber signal, an editorial serif where every other engineer uses a generic tech-sans — <b>craft that proves taste, wrapped around dead-clear proof of what you've shipped.</b> React to it, and tell me if it hits the bar in your recording.</p>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var canvas = document.getElementById('graph');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var w, h, dpr, nodes, edges, pulses, raf, t = 0;
+
+    function rand(a, b) { return a + Math.random() * (b - a); }
+
+    function build() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = canvas.clientWidth; h = canvas.clientHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      // node grid biased to the right side (behind/around headline right edge)
+      nodes = [];
+      var N = w < 640 ? 16 : 30;
+      for (var i = 0; i < N; i++) {
+        nodes.push({
+          x: rand(w * 0.30, w * 1.02),
+          y: rand(h * 0.08, h * 0.95),
+          r: rand(1.4, 3.2),
+          bx: 0, by: 0,
+          pulse: Math.random()
+        });
+      }
+      // connect near neighbours
+      edges = [];
+      for (var a = 0; a < nodes.length; a++) {
+        var conns = 0;
+        for (var b = a + 1; b < nodes.length && conns < 3; b++) {
+          var dx = nodes[a].x - nodes[b].x, dy = nodes[a].y - nodes[b].y;
+          var d = Math.sqrt(dx * dx + dy * dy);
+          if (d < w * 0.20) { edges.push({ a: a, b: b, d: d }); conns++; }
+        }
+      }
+      pulses = [];
+      for (var e = 0; e < Math.min(edges.length, 10); e++) {
+        pulses.push({ edge: (Math.random() * edges.length) | 0, p: Math.random(), sp: rand(0.002, 0.006) });
+      }
+    }
+
+    var mx = -999, my = -999;
+    if (!reduce) {
+      window.addEventListener('pointermove', function (ev) {
+        var rect = canvas.getBoundingClientRect();
+        mx = ev.clientX - rect.left; my = ev.clientY - rect.top;
+      });
+    }
+
+    function draw() {
+      t += 1;
+      ctx.clearRect(0, 0, w, h);
+      // edges
+      for (var i = 0; i < edges.length; i++) {
+        var A = nodes[edges[i].a], B = nodes[edges[i].b];
+        ctx.beginPath();
+        ctx.moveTo(A.x + A.bx, A.y + A.by);
+        ctx.lineTo(B.x + B.bx, B.y + B.by);
+        ctx.strokeStyle = 'rgba(236,231,222,0.06)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      }
+      // pulses travelling along edges (amber signal)
+      for (var p = 0; p < pulses.length; p++) {
+        var pl = pulses[p], ed = edges[pl.edge]; if (!ed) continue;
+        var A2 = nodes[ed.a], B2 = nodes[ed.b];
+        pl.p += pl.sp; if (pl.p > 1) { pl.p = 0; pl.edge = (Math.random() * edges.length) | 0; }
+        var px = A2.x + (B2.x - A2.x) * pl.p, py = A2.y + (B2.y - A2.y) * pl.p;
+        var g = ctx.createRadialGradient(px, py, 0, px, py, 7);
+        g.addColorStop(0, 'rgba(255,106,43,0.9)');
+        g.addColorStop(1, 'rgba(255,106,43,0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(px, py, 7, 0, Math.PI * 2); ctx.fill();
+      }
+      // nodes
+      for (var n = 0; n < nodes.length; n++) {
+        var nd = nodes[n];
+        // gentle cursor repulsion
+        if (!reduce) {
+          var dx = nd.x - mx, dy = nd.y - my, dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) { var f = (120 - dist) / 120 * 14; nd.bx += (dx / dist * f - nd.bx) * 0.1; nd.by += (dy / dist * f - nd.by) * 0.1; }
+          else { nd.bx += (0 - nd.bx) * 0.06; nd.by += (0 - nd.by) * 0.06; }
+        }
+        var tw = 0.5 + 0.5 * Math.sin(t * 0.03 + nd.pulse * 6.28);
+        ctx.beginPath();
+        ctx.arc(nd.x + nd.bx, nd.y + nd.by, nd.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(236,231,222,' + (0.25 + tw * 0.5) + ')';
+        ctx.fill();
+      }
+      raf = requestAnimationFrame(draw);
+    }
+
+    function start() { build(); if (raf) cancelAnimationFrame(raf); if (reduce) { drawStatic(); } else { draw(); } }
+    function drawStatic() {
+      ctx.clearRect(0, 0, w, h);
+      for (var i = 0; i < edges.length; i++) { var A = nodes[edges[i].a], B = nodes[edges[i].b]; ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.strokeStyle = 'rgba(236,231,222,0.06)'; ctx.lineWidth = 1; ctx.stroke(); }
+      for (var n = 0; n < nodes.length; n++) { ctx.beginPath(); ctx.arc(nodes[n].x, nodes[n].y, nodes[n].r, 0, Math.PI * 2); ctx.fillStyle = 'rgba(236,231,222,0.5)'; ctx.fill(); }
+    }
+    var to;
+    window.addEventListener('resize', function () { clearTimeout(to); to = setTimeout(start, 200); });
+    start();
+  })();
+</script>

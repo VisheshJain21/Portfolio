@@ -1,0 +1,734 @@
+<title>Design Intelligence Report — Vishesh Jain Portfolio</title>
+<style>
+  :root {
+    /* Light — cool "blueprint" paper */
+    --ground: #E7E9EC;
+    --panel: #F3F4F6;
+    --panel-2: #FBFBFC;
+    --ink: #14171D;
+    --ink-dim: #565C68;
+    --ink-faint: #868C98;
+    --line: rgba(20, 23, 29, 0.14);
+    --line-strong: rgba(20, 23, 29, 0.30);
+    --signal: #C24A15;
+    --signal-ink: #C24A15;
+    --confirmed: #C24A15;
+    --inferred: #5C6472;
+    --glow: rgba(194, 74, 21, 0.10);
+
+    --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+    --mono: "SF Mono", "JetBrains Mono", "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+
+    --maxw: 1180px;
+    --rail: 210px;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #0B0E14;
+      --panel: #11151E;
+      --panel-2: #161B26;
+      --ink: #ECE7DE;
+      --ink-dim: #9198A6;
+      --ink-faint: #626977;
+      --line: rgba(236, 231, 222, 0.12);
+      --line-strong: rgba(236, 231, 222, 0.26);
+      --signal: #FF6A2B;
+      --signal-ink: #FF7B42;
+      --confirmed: #FF6A2B;
+      --inferred: #7C8698;
+      --glow: rgba(255, 106, 43, 0.14);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0B0E14;
+    --panel: #11151E;
+    --panel-2: #161B26;
+    --ink: #ECE7DE;
+    --ink-dim: #9198A6;
+    --ink-faint: #626977;
+    --line: rgba(236, 231, 222, 0.12);
+    --line-strong: rgba(236, 231, 222, 0.26);
+    --signal: #FF6A2B;
+    --signal-ink: #FF7B42;
+    --confirmed: #FF6A2B;
+    --inferred: #7C8698;
+    --glow: rgba(255, 106, 43, 0.14);
+  }
+
+  :root[data-theme="light"] {
+    --ground: #E7E9EC;
+    --panel: #F3F4F6;
+    --panel-2: #FBFBFC;
+    --ink: #14171D;
+    --ink-dim: #565C68;
+    --ink-faint: #868C98;
+    --line: rgba(20, 23, 29, 0.14);
+    --line-strong: rgba(20, 23, 29, 0.30);
+    --signal: #C24A15;
+    --signal-ink: #C24A15;
+    --confirmed: #C24A15;
+    --inferred: #5C6472;
+    --glow: rgba(194, 74, 21, 0.10);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: var(--signal); color: var(--ground); }
+
+  .wrap {
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 clamp(1.1rem, 4vw, 3rem);
+  }
+
+  a { color: var(--signal-ink); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color .3s var(--ease); }
+  a:hover { border-color: currentColor; }
+
+  /* ---------- Masthead ---------- */
+  .masthead {
+    padding: clamp(3rem, 9vw, 7rem) 0 clamp(2rem, 5vw, 3.5rem);
+    border-bottom: 1px solid var(--line-strong);
+    position: relative;
+  }
+  .transmission {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.4rem;
+    align-items: center;
+    padding-bottom: 2rem;
+  }
+  .transmission .dot { width: 6px; height: 6px; background: var(--signal); border-radius: 50%; display: inline-block; box-shadow: 0 0 12px 2px var(--glow); }
+  .masthead h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(2.6rem, 8vw, 6.2rem);
+    line-height: 0.98;
+    letter-spacing: -0.02em;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .masthead h1 em { font-style: italic; color: var(--ink-dim); }
+  .masthead .sub {
+    margin-top: 1.6rem;
+    max-width: 60ch;
+    font-size: clamp(1rem, 2.2vw, 1.25rem);
+    color: var(--ink-dim);
+    line-height: 1.55;
+  }
+  .meta-grid {
+    margin-top: 2.6rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .meta-grid > div { background: var(--ground); padding: 0.9rem 1rem; }
+  .meta-grid dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.35rem; }
+  .meta-grid dd { margin: 0; font-size: 0.9rem; font-weight: 600; }
+
+  /* ---------- Block grid ---------- */
+  .block { padding: clamp(2.6rem, 6vw, 4.6rem) 0; border-bottom: 1px solid var(--line); }
+  .block-grid { display: grid; grid-template-columns: var(--rail) 1fr; gap: clamp(1rem, 4vw, 3rem); align-items: start; }
+  .rail { position: sticky; top: 1.5rem; }
+  .rail .num { font-family: var(--serif); font-size: 2.2rem; line-height: 1; color: var(--signal); font-weight: 400; }
+  .rail .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--ink-dim); margin-top: 0.7rem; display: block; line-height: 1.6; }
+  .rail .kicker { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--ink-faint); margin-top: 0.8rem; display: block; }
+
+  .content > * + * { margin-top: 1.15rem; }
+  .content h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.7rem, 4vw, 2.7rem); line-height: 1.05; letter-spacing: -0.015em; margin: 0; text-wrap: balance; }
+  .content h3 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.25rem, 2.6vw, 1.6rem); letter-spacing: -0.01em; margin: 2.2rem 0 0; }
+  .content h4 { font-family: var(--mono); font-weight: 600; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-dim); margin: 1.8rem 0 0; }
+  .content p { max-width: 66ch; }
+  .content p, .content li { color: var(--ink); }
+  .lead { font-size: 1.12rem; color: var(--ink-dim) !important; max-width: 62ch; }
+  .content ul { max-width: 66ch; padding-left: 0; list-style: none; }
+  .content ul li { position: relative; padding-left: 1.4rem; margin-top: 0.55rem; }
+  .content ul li::before { content: ""; position: absolute; left: 0; top: 0.62em; width: 6px; height: 1px; background: var(--signal); }
+  .content strong { font-weight: 650; }
+  em.term { font-style: normal; font-family: var(--mono); font-size: 0.86em; background: var(--panel); padding: 0.08em 0.4em; border-radius: 3px; border: 1px solid var(--line); letter-spacing: 0.02em; }
+
+  /* ---------- Tags ---------- */
+  .tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; padding: 0.18em 0.5em; border-radius: 3px; white-space: nowrap; display: inline-block; vertical-align: middle; border: 1px solid; }
+  .tag.c { color: var(--confirmed); border-color: var(--confirmed); }
+  .tag.i { color: var(--inferred); border-color: var(--inferred); }
+  .taginline { font-family: var(--mono); font-size: 0.7em; letter-spacing: 0.1em; text-transform: uppercase; vertical-align: super; margin-left: 0.35em; }
+  .taginline.c { color: var(--confirmed); }
+  .taginline.i { color: var(--inferred); }
+
+  /* ---------- Spec sheet ---------- */
+  .spec { border-top: 1px solid var(--line-strong); margin-top: 1.6rem; }
+  .spec .row { display: grid; grid-template-columns: minmax(120px, 180px) 1fr; gap: 1rem; padding: 0.7rem 0; border-bottom: 1px solid var(--line); }
+  .spec .row dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); padding-top: 0.2em; }
+  .spec .row dd { margin: 0; font-size: 0.94rem; }
+
+  /* ---------- Specimen head ---------- */
+  .specimen-head { display: flex; gap: 1.5rem; align-items: flex-start; flex-wrap: wrap; justify-content: space-between; }
+  .specimen-head .id { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; color: var(--ink-faint); text-transform: uppercase; }
+  .specimen-head .url { font-family: var(--mono); font-size: 12px; color: var(--ink-dim); }
+
+  /* signature motif box */
+  .motif { width: 128px; height: 128px; flex: 0 0 auto; border: 1px solid var(--line); background: var(--panel-2); border-radius: 4px; overflow: hidden; position: relative; display: grid; place-items: center; }
+  .motif .cap { position: absolute; bottom: 6px; left: 8px; font-family: var(--mono); font-size: 8px; letter-spacing: 0.14em; color: var(--ink-faint); text-transform: uppercase; }
+
+  /* Lusion odometer */
+  .odo { display: flex; gap: 3px; font-family: var(--serif); font-size: 2.6rem; line-height: 1; height: 2.6rem; overflow: hidden; color: var(--ink); }
+  .odo .col { height: 2.6rem; overflow: hidden; }
+  .odo .strip { display: flex; flex-direction: column; animation: roll 5s steps(10) infinite; }
+  .odo .col:nth-child(2) .strip { animation-duration: 1.6s; }
+  .odo .col:nth-child(3) .strip { animation-duration: 0.5s; }
+  .odo .strip span { height: 2.6rem; display: grid; place-items: center; }
+  @keyframes roll { to { transform: translateY(-100%); } }
+
+  /* Active Theory glyph orb */
+  .orb { width: 96px; height: 96px; border-radius: 50%; overflow: hidden; position: relative; font-family: var(--mono); font-size: 9px; line-height: 11px; letter-spacing: 1px; color: var(--inferred); word-break: break-all; padding: 4px; opacity: 0.85; }
+  .orb::after { content: ""; position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 18px 2px var(--glow); border: 1px solid var(--signal); animation: pulse 3s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 0.4; transform: scale(0.96); } 50% { opacity: 1; transform: scale(1); } }
+
+  /* Igloo ASCII wave */
+  .wave { font-family: var(--mono); font-size: 13px; letter-spacing: 1px; color: var(--ink-dim); white-space: nowrap; overflow: hidden; width: 100px; }
+  .wave span { display: inline-block; animation: shift 1.8s steps(9) infinite; }
+  @keyframes shift { to { transform: translateX(-52px); } }
+
+  /* ---------- Callouts ---------- */
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); margin-top: 1.6rem; }
+  .cols > div { background: var(--ground); padding: 1.1rem 1.2rem; }
+  .cols h4 { margin: 0 0 0.7rem; }
+  .cols.borrow > div:first-child h4 { color: var(--signal); }
+  .cols ul { margin: 0; }
+  .cols ul li { font-size: 0.9rem; }
+
+  .aside { background: var(--panel); border-left: 2px solid var(--signal); padding: 1.1rem 1.3rem; margin-top: 1.6rem; border-radius: 0 4px 4px 0; }
+  .aside p { margin: 0; font-size: 0.94rem; max-width: none; }
+  .aside .lbl { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--signal); display: block; margin-bottom: 0.5rem; }
+
+  .thesis { font-family: var(--serif); font-size: clamp(1.35rem, 3.4vw, 2.1rem); line-height: 1.25; letter-spacing: -0.01em; max-width: 24ch; color: var(--ink); }
+  .thesis .hl { color: var(--signal); font-style: italic; }
+
+  /* ---------- Matrix table ---------- */
+  .tablewrap { overflow-x: auto; margin-top: 1.6rem; border: 1px solid var(--line); border-radius: 4px; }
+  table.matrix { width: 100%; border-collapse: collapse; font-size: 0.86rem; min-width: 640px; }
+  table.matrix th, table.matrix td { text-align: left; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  table.matrix thead th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-dim); background: var(--panel); position: sticky; top: 0; }
+  table.matrix tbody th { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); font-weight: 500; white-space: nowrap; }
+  table.matrix tbody tr:last-child td { border-bottom: none; }
+  table.matrix .em { color: var(--signal); }
+
+  /* ---------- Swatches ---------- */
+  .swatches { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.7rem; margin-top: 1.4rem; }
+  .sw { border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+  .sw .chip { height: 54px; }
+  .sw .info { padding: 0.5rem 0.6rem; }
+  .sw .info .n { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-dim); }
+  .sw .info .h { font-family: var(--mono); font-size: 11px; color: var(--ink); }
+
+  /* type specimen */
+  .typerow { border-top: 1px solid var(--line); padding: 1rem 0; display: grid; grid-template-columns: 130px 1fr; gap: 1rem; align-items: baseline; }
+  .typerow .role { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); }
+  .typerow .samp-serif { font-family: var(--serif); font-size: 1.7rem; letter-spacing: -0.01em; }
+  .typerow .samp-mono { font-family: var(--mono); font-size: 1rem; letter-spacing: 0.02em; }
+  .typerow .samp-sans { font-family: var(--sans); font-size: 1.05rem; }
+  .typerow .meta { font-family: var(--mono); font-size: 11px; color: var(--ink-dim); margin-top: 0.3rem; }
+
+  /* roadmap */
+  .phase { display: grid; grid-template-columns: 54px 1fr; gap: 1.1rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
+  .phase .pn { font-family: var(--mono); font-size: 12px; color: var(--signal); letter-spacing: 0.1em; padding-top: 0.2rem; }
+  .phase h4 { margin: 0 0 0.3rem; color: var(--ink); font-size: 13px; }
+  .phase p { margin: 0; font-size: 0.9rem; color: var(--ink-dim); max-width: 62ch; }
+
+  /* section-by-section experience list */
+  .exp { counter-reset: exp; margin-top: 1.4rem; }
+  .exp .item { border-top: 1px solid var(--line); padding: 1.1rem 0; display: grid; grid-template-columns: 46px 1fr; gap: 1rem; }
+  .exp .item::before { counter-increment: exp; content: counter(exp, decimal-leading-zero); font-family: var(--mono); font-size: 11px; color: var(--signal); letter-spacing: 0.1em; padding-top: 0.25rem; }
+  .exp .item h4 { margin: 0 0 0.25rem; font-family: var(--serif); font-weight: 400; font-size: 1.15rem; letter-spacing: -0.01em; color: var(--ink); text-transform: none; }
+  .exp .item p { margin: 0; font-size: 0.9rem; color: var(--ink-dim); max-width: 64ch; }
+  .exp .item .mv { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); margin-top: 0.5rem; display: block; }
+
+  footer.foot { padding: 3rem 0 4rem; color: var(--ink-faint); font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; }
+
+  /* reveal */
+  .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 720px) {
+    .block-grid { grid-template-columns: 1fr; gap: 1rem; }
+    .rail { position: static; display: flex; align-items: baseline; gap: 1rem; }
+    .rail .eyebrow { margin-top: 0; }
+    .rail .kicker { display: none; }
+    .cols { grid-template-columns: 1fr; }
+    .content p, .content ul, .lead { max-width: 100%; }
+    .typerow { grid-template-columns: 1fr; gap: 0.3rem; }
+    .exp .item, .phase { grid-template-columns: 34px 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .odo .strip, .orb::after, .wave span { animation: none !important; }
+    .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <!-- ============ MASTHEAD ============ -->
+  <header class="masthead">
+    <div class="transmission">
+      <span><span class="dot"></span>&nbsp;&nbsp;Design Intelligence</span>
+      <span>Ref&nbsp;/&nbsp;VJ-001</span>
+      <span>Phase&nbsp;01 — Discovery</span>
+      <span>Status: Awaiting Direction</span>
+    </div>
+    <h1>Reading the<br>machine behind<br>the <em>magic.</em></h1>
+    <p class="sub">A section-by-section, interaction-by-interaction teardown of three world-class creative studios — Lusion, Active Theory, and Igloo Inc. — and the synthesis of what it teaches us for your portfolio. Observations are marked <span class="tag c">Confirmed</span> where verified in-browser and <span class="tag i">Inferred</span> where reasoned but unproven.</p>
+    <dl class="meta-grid">
+      <div><dt>Prepared for</dt><dd>Vishesh Jain</dd></div>
+      <div><dt>Date</dt><dd>15 Jul 2026</dd></div>
+      <div><dt>Method</dt><dd>Live DOM &amp; runtime inspection</dd></div>
+      <div><dt>Specimens</dt><dd>3 studios</dd></div>
+      <div><dt>Next gate</dt><dd>Approve direction → build</dd></div>
+    </dl>
+  </header>
+
+  <!-- ============ 00 HOW TO READ ============ -->
+  <section class="block">
+    <div class="block-grid">
+      <div class="rail">
+        <div class="num">00</div>
+        <span class="eyebrow">The Brief</span>
+        <span class="kicker">// integrity of evidence</span>
+      </div>
+      <div class="content">
+        <h2>What was actually observed — and what wasn't.</h2>
+        <p class="lead">Every claim in this dossier is tagged. This matters: a design decision built on a wrong assumption compounds. Where the sandbox network throttled a heavy WebGL payload before it finished, I say so rather than dressing a guess as a fact.</p>
+        <p>Inspection was performed in a real Chromium browser: reading the live DOM tree, computed styles, loaded font tables, network requests, and the global JavaScript namespace of each site, plus manual interaction (clicking, hovering, waiting out preloaders) and screenshots at multiple load states.</p>
+        <div class="cols">
+          <div>
+            <h4 style="color:var(--confirmed)">Confirmed means</h4>
+            <ul>
+              <li>Read directly from the page: a computed <code>font-family</code>, a network request, a framework global, a rendered pixel I saw.</li>
+            </ul>
+          </div>
+          <div>
+            <h4 style="color:var(--inferred)">Inferred means</h4>
+            <ul>
+              <li>A reasoned deduction from evidence — e.g. "custom WebGL engine" because <em class="term">window.THREE</em> was absent — but not proven from source.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 01 SPECIMEN: LUSION ============ -->
+  <section class="block">
+    <div class="block-grid">
+      <div class="rail">
+        <div class="num">01</div>
+        <span class="eyebrow">Specimen · Lusion</span>
+        <span class="kicker">// the hybrid</span>
+      </div>
+      <div class="content">
+        <div class="specimen-head">
+          <div>
+            <div class="id">Specimen 01</div>
+            <h2 style="margin-top:.4rem">Lusion</h2>
+            <div class="url">lusion.co · Bristol, UK</div>
+          </div>
+          <div class="motif" aria-hidden="true">
+            <div class="odo">
+              <div class="col"><div class="strip"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span></div></div>
+              <div class="col"><div class="strip"><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span></div></div>
+              <div class="col"><div class="strip"><span>7</span><span>8</span><span>9</span><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span></div></div>
+            </div>
+            <span class="cap">Odometer preload</span>
+          </div>
+        </div>
+        <p class="lead">The most <strong>replicable</strong> of the three, and the best teacher. Lusion is a DOM-and-WebGL hybrid: a real, accessible, crawlable document with heavy 3D layered in at chosen moments — the pragmatic architecture a portfolio should emulate.</p>
+
+        <dl class="spec">
+          <div class="row"><dt>Framework</dt><dd>Astro <span class="taginline c">Confirmed</span> — served from <em class="term">/_astro/</em> bundles</dd></div>
+          <div class="row"><dt>Type system</dt><dd>Aeonik (neo-grotesque, 400/500/italic) for everything, plus IBM Plex Mono &amp; a custom <em class="term">LusionMono</em> for technical labels. Self-hosted woff2. <span class="taginline c">Confirmed</span></dd></div>
+          <div class="row"><dt>Palette</dt><dd>A <strong>light</strong> editorial base — root background is white — with black text and one electric ultramarine (#0016EC / #1A2FFB), plus a lavender-white #F0F1FA. Dark appears only in the preloader &amp; immersive WebGL. <span class="taginline c">Confirmed</span></dd></div>
+          <div class="row"><dt>Scroll</dt><dd>Virtualized smooth scroll — <em class="term">body { overflow:hidden }</em> with a transformed track (Lenis-class). <span class="taginline c">Confirmed</span> behaviour / <span class="taginline i">Inferred</span> library</dd></div>
+          <div class="row"><dt>WebGL</dt><dd>3 canvases; <em class="term">window.THREE</em> absent → a bundled/custom renderer. <span class="taginline c">Confirmed</span> count / <span class="taginline i">Inferred</span> engine</dd></div>
+          <div class="row"><dt>Hero type</dt><dd>"Bold Ideas, Brought to Life" — 128px, weight 400, letter-spacing −0.02em. <span class="taginline c">Confirmed</span></dd></div>
+        </dl>
+
+        <h3>The preloader — a signature, not a spinner</h3>
+        <p>Black screen. A thin centered progress bar (white fill on a dark track). And the memorable move: an <strong>oversized numeric counter cropped hard against the bottom-left corner</strong>, its digits rolling upward per-column like a mechanical odometer. Because the type is clipped by the viewport edge, only the top ~60% of each digit shows — a deliberate tension between "huge" and "hidden." Crucially, it is <strong>gated on real asset load</strong>, not a fixed timer: I watched it crawl as the WebGL payload downloaded.</p>
+
+        <h3>Scroll narrative &amp; sections</h3>
+        <p>The document reads as a story, confirmed from the DOM tree: an intro thesis ("We create 3D visual storytelling…") → "Bold Ideas, Brought to Life" → an approach statement → a reel with a Watch button → <strong>Featured Work</strong>, ten projects each stamped with a discipline tag-list (<em class="term">concept · web · design · development · 3d · animation</em>) → a manifesto "Where Creative Ideas Become Immersive Experiences" → the line "Step into a new world and let your imagination run wild," split into <strong>individual word spans</strong> (proof of word-by-word reveal choreography) → a CTA "Is Your Big Idea Ready to Go Wild?" → a footer with address, socials, newsletter, and an R&amp;D "Labs" link.</p>
+
+        <div class="cols borrow">
+          <div>
+            <h4>Worth adapting</h4>
+            <ul>
+              <li>Asset-gated preloader with an oversized, cropped counter.</li>
+              <li>Word/line-split text reveals on scroll.</li>
+              <li>Project rows stamped with discipline tags.</li>
+              <li>One electric accent over a restrained base.</li>
+              <li>Mono for labels = quiet technical authority.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Do not copy</h4>
+            <ul>
+              <li>The ultramarine + Aeonik identity itself.</li>
+              <li>A custom WebGL engine — use Three/R3F.</li>
+              <li>Their exact "Bold Ideas" copy or layout.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="aside">
+          <span class="lbl">Difficulty · adapt path</span>
+          <p>Preloader &amp; split-text: <strong>easy–medium</strong> (GSAP + a splitting util). Hybrid DOM+WebGL architecture: <strong>medium</strong> and the right target for you. The bespoke renderer is the only hard part — and you should sidestep it with React Three Fiber.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 02 SPECIMEN: ACTIVE THEORY ============ -->
+  <section class="block">
+    <div class="block-grid">
+      <div class="rail">
+        <div class="num">02</div>
+        <span class="eyebrow">Specimen · Active Theory</span>
+        <span class="kicker">// the extremist</span>
+      </div>
+      <div class="content">
+        <div class="specimen-head">
+          <div>
+            <div class="id">Specimen 02</div>
+            <h2 style="margin-top:.4rem">Active Theory</h2>
+            <div class="url">activetheory.net · in-house makers since 2012</div>
+          </div>
+          <div class="motif" aria-hidden="true">
+            <div class="orb">75//5 7//55/7 //5//7/5 5//7//5 /7/5//7 5//5/7/ /75//5/ 7//5//7</div>
+            <span class="cap">Gateway orb</span>
+          </div>
+        </div>
+        <p class="lead">The most technically extreme — and a cautionary tale. The <strong>entire interface is rendered inside a single WebGL canvas</strong>. Breathtaking; also a strategy to <em>admire, not clone</em>, because it forfeits the accessibility and SEO a portfolio depends on.</p>
+
+        <dl class="spec">
+          <div class="row"><dt>Engine</dt><dd>A proprietary in-house framework, "Hydra" — globals <em class="term">Hydra</em>, <em class="term">HydraObject</em>, <em class="term">FBORendererWebGL</em>, <em class="term">ShaderRendererWebGL</em>, <em class="term">TextureRendererWebGL</em>. WebGL2. <span class="taginline c">Confirmed</span></dd></div>
+          <div class="row"><dt>DOM</dt><dd><strong>~73 nodes total.</strong> The text, nav, everything is drawn in-canvas — "Times" is only a fallback because the real type is textured into WebGL. <span class="taginline c">Confirmed</span></dd></div>
+          <div class="row"><dt>Extras</dt><dd><em class="term">GlobalAudio3D</em> spatial audio, a <em class="term">NoGLPolyfill</em> fallback path, and goober CSS-in-JS for the thin DOM shell. <span class="taginline c">Confirmed</span></dd></div>
+          <div class="row"><dt>Palette</dt><dd>Pure black, electric blue/teal field lines, cool white. <span class="taginline c">Confirmed</span></dd></div>
+        </dl>
+
+        <h3>The gateway preloader</h3>
+        <p>It begins as a sphere textured from a field of ASCII glyphs — slashes and the digits 5 and 7 — with a teal "/75" count. As assets arrive it comes alive: electric-blue <strong>magnetic field lines radiate outward like iron filings around a dipole</strong>, twin "lens" poles form at the sides, and a ">>>" prompt invites a click. It is not passive — clicking perturbs the field. Entering the site plays a transition wipe. This is a <em>threshold ritual</em>: you don't load the site, you cross into it.</p>
+
+        <h3>The hero, once inside</h3>
+        <p>A floating <strong>pill-shaped navigation</strong> (WORK · lens-logo · CONTACT) with a soft glowing underside; "SCROLL DOWN" in teal mono; the "a" monogram inside a glowing ring trailing a 3D ribbon of light bent into an infinity loop; and a numbered project carousel (<em class="term">&lt;&lt; · 5. Magiksolo — Quantum World · &gt;&gt;</em>). A "Toggle Audio" control confirms the spatial-sound layer.</p>
+
+        <div class="cols borrow">
+          <div>
+            <h4>Worth adapting</h4>
+            <ul>
+              <li>One <em>signature interactive object</em> as the hero's thesis.</li>
+              <li>The magnetic / field-line reaction to the cursor.</li>
+              <li>A floating pill nav with a soft glow.</li>
+              <li>An "enter" gesture as a moment of ceremony.</li>
+              <li>Numbered, navigable project carousel.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Do not copy</h4>
+            <ul>
+              <li>Rendering the whole UI in WebGL — kills a11y &amp; SEO.</li>
+              <li>Building a bespoke engine.</li>
+              <li>The orb / dipole motif itself.</li>
+              <li>Mandatory audio or a hard gate on entry.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="aside">
+          <span class="lbl">Difficulty · adapt path</span>
+          <p>A cursor-reactive hero object in Three.js/R3F with a custom shader: <strong>medium–hard</strong> but very achievable and high-impact. The all-WebGL architecture: <strong>very hard</strong> and, for a portfolio, the wrong trade. Take the <em>feeling</em> of the gateway; keep your content in the DOM.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 SPECIMEN: IGLOO ============ -->
+  <section class="block">
+    <div class="block-grid">
+      <div class="rail">
+        <div class="num">03</div>
+        <span class="eyebrow">Specimen · Igloo Inc.</span>
+        <span class="kicker">// the minimalist stack</span>
+      </div>
+      <div class="content">
+        <div class="specimen-head">
+          <div>
+            <div class="id">Specimen 03</div>
+            <h2 style="margin-top:.4rem">Igloo Inc.</h2>
+            <div class="url">igloo.inc</div>
+          </div>
+          <div class="motif" aria-hidden="true">
+            <div class="wave"><span>=−=+++=−−==+++=−−==+++=−−</span></div>
+            <span class="cap">ASCII wave preload</span>
+          </div>
+        </div>
+        <p class="lead">The leanest, most attainable technical stack — and the one closest to what you'll actually ship. Vanilla Three.js and GSAP over a Vite bundle, no framework overhead.</p>
+
+        <dl class="spec">
+          <div class="row"><dt>Stack</dt><dd>Raw <strong>Three.js</strong> (<em class="term">__THREE__</em> global) + <strong>GSAP</strong> (<em class="term">gsapVersions</em>), a single Vite bundle, <em>no</em> React root — vanilla. Mount points <em class="term">#webgl</em> and <em class="term">#loader</em>. <span class="taginline c">Confirmed</span></dd></div>
+          <div class="row"><dt>Type</dt><dd>IBM Plex Mono for technical text; a serif for display (Times observed — likely a deliberate editorial choice, possibly still-loading fallback). <span class="taginline c">Confirmed</span> mono / <span class="taginline i">Inferred</span> serif intent</dd></div>
+          <div class="row"><dt>Palette</dt><dd>A desaturated <strong>ice blue-grey</strong> base (#A0A5B1) with white/black — "cold" as identity. <span class="taginline c">Confirmed</span></dd></div>
+          <div class="row"><dt>Preloader</dt><dd>A single line of monospace glyphs morphing like a waveform (<em class="term">---=+=----</em> → <em class="term">+++===----</em>), scanning; no percentage. <span class="taginline c">Confirmed</span></dd></div>
+        </dl>
+
+        <div class="aside">
+          <span class="lbl">Honesty note</span>
+          <p>Igloo's full 3D scene <strong>did not finish loading</strong> in the sandbox — the heavy payload was network-throttled past a practical wait. The stack, palette, type, and preloader above are confirmed; the crystalline scroll-narrative itself is <span class="tag i">Inferred</span> from the loaded shell and prior knowledge, not verified this session.</p>
+        </div>
+
+        <div class="cols borrow">
+          <div>
+            <h4>Worth adapting</h4>
+            <ul>
+              <li>The lean Three.js + GSAP + Vite stack philosophy.</li>
+              <li>ASCII/terminal texture as loader &amp; motif.</li>
+              <li>A desaturated, "temperature-led" neutral base.</li>
+              <li>Serif display + mono label pairing.</li>
+            </ul>
+          </div>
+          <div>
+            <h4>Do not copy</h4>
+            <ul>
+              <li>The ice / igloo concept &amp; web3 framing.</li>
+              <li>The #A0A5B1 grey as-is.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 SYNTHESIS ============ -->
+  <section class="block">
+    <div class="block-grid">
+      <div class="rail">
+        <div class="num">04</div>
+        <span class="eyebrow">Synthesis</span>
+        <span class="kicker">// the shared DNA</span>
+      </div>
+      <div class="content">
+        <h2>Three studios, one grammar.</h2>
+        <p class="lead">Strip away the surface and the same nine principles recur. This is the vocabulary of "award-winning" — not effects, but discipline.</p>
+        <ul>
+          <li><strong>The preloader is a signature.</strong> Never a generic spinner; always bespoke, numeric/technical, and gated on real load — the first frame of the brand.</li>
+          <li><strong>Restraint, then one voltage.</strong> A dark or desaturated, disciplined base carrying a single electric accent. Boldness is spent in exactly one place.</li>
+          <li><strong>Serif or grotesque display + a monospace foil.</strong> The mono on labels and counters is what reads as <em>engineering credibility</em>.</li>
+          <li><strong>WebGL as centerpiece, not wallpaper.</strong> 3D appears where it means something; the rest breathes.</li>
+          <li><strong>Virtualized smooth scroll</strong> as the transport layer for choreography.</li>
+          <li><strong>Type split to the word or character</strong> for reveals.</li>
+          <li><strong>Immense negative space &amp; oversized, sometimes cropped, numerals.</strong></li>
+          <li><strong>Signal words as content</strong> — "SCROLL DOWN", "&gt;&gt;&gt;", "CONTINUE" — the interface narrates itself.</li>
+          <li><strong>A minimal, floating navigation</strong> that stays out of the way.</li>
+        </ul>
+
+        <h3>Comparison matrix</h3>
+        <div class="tablewrap">
+          <table class="matrix">
+            <thead>
+              <tr><th>Axis</th><th>Lusion</th><th>Active Theory</th><th>Igloo Inc.</th></tr>
+            </thead>
+            <tbody>
+              <tr><th>Framework</th><td>Astro</td><td>Custom "Hydra"</td><td>Vanilla + Vite</td></tr>
+              <tr><th>Rendering</th><td class="em">DOM + WebGL hybrid</td><td>All-WebGL</td><td>Three.js scene + DOM</td></tr>
+              <tr><th>DOM weight</th><td>Full document</td><td>~73 nodes</td><td>Light + #webgl</td></tr>
+              <tr><th>Type</th><td>Aeonik + Plex/Lusion Mono</td><td>WebGL-textured</td><td>Serif + Plex Mono</td></tr>
+              <tr><th>Palette logic</th><td>Light + ultramarine</td><td>Black + teal</td><td>Ice-grey neutral</td></tr>
+              <tr><th>Preloader</th><td>Cropped odometer</td><td>Interactive orb gate</td><td>ASCII waveform</td></tr>
+              <tr><th>Standout</th><td>Split-text choreography</td><td>Cursor-reactive hero</td><td>Temperature identity</td></tr>
+              <tr><th>For you</th><td class="em">Adopt architecture</td><td>Admire, borrow feel</td><td>Adopt stack ethos</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 DIRECTION ============ -->
+  <section class="block">
+    <div class="block-grid">
+      <div class="rail">
+        <div class="num">05</div>
+        <span class="eyebrow">Proposed Direction</span>
+        <span class="kicker">// for approval</span>
+      </div>
+      <div class="content">
+        <p class="thesis">They speak as <span class="hl">"we."</span> Your edge is that you speak as <span class="hl">"I."</span></p>
+        <p class="lead" style="margin-top:1.4rem">The studios sell a collective. A portfolio is intimate — one mind, one point of view. The distinctive move isn't more spectacle than a studio (you'll lose that arms race); it's a <strong>single, precise, personal instrument</strong> that a studio's committee aesthetic can't produce. Below is a starting proposal, offered for your direction — not a finished decision.</p>
+
+        <h3>Working concept — "Instrument"</h3>
+        <p>Your work presented like readouts on a calm, precise console: a dark, engineered space where one warm signal marks what matters. It nods to the shared grammar (bespoke preloader, mono labels, one accent, a WebGL centerpiece) but commits to <em>warmth and intimacy</em> where the references stay cold and corporate — a deliberate counter-position.</p>
+
+        <h4>Color system</h4>
+        <div class="swatches">
+          <div class="sw"><div class="chip" style="background:#0B0E14"></div><div class="info"><div class="n">Ground</div><div class="h">#0B0E14</div></div></div>
+          <div class="sw"><div class="chip" style="background:#161B26"></div><div class="info"><div class="n">Panel</div><div class="h">#161B26</div></div></div>
+          <div class="sw"><div class="chip" style="background:#ECE7DE"></div><div class="info"><div class="n">Bone</div><div class="h">#ECE7DE</div></div></div>
+          <div class="sw"><div class="chip" style="background:#7C8698"></div><div class="info"><div class="n">Slate</div><div class="h">#7C8698</div></div></div>
+          <div class="sw"><div class="chip" style="background:#FF6A2B"></div><div class="info"><div class="n">Signal</div><div class="h">#FF6A2B</div></div></div>
+        </div>
+        <p style="margin-top:1rem">A <strong>blue-biased near-black</strong> (never pure #000) grounds it; <strong>warm bone</strong> text creates warm/cool tension the references avoid; a single <strong>molten amber</strong> is the only saturated element — the deliberate opposite of everyone's electric blue. (This report is set in exactly this system, so you're reading the palette now.)</p>
+
+        <h4>Typography</h4>
+        <div class="typerow"><div class="role">Display</div><div><div class="samp-serif">Bold ideas, engineered.</div><div class="meta">High-contrast serif — editorial, human, the "I" voice · used large &amp; sparingly</div></div></div>
+        <div class="typerow"><div class="role">Utility / label</div><div><div class="samp-mono">// SELECTED WORK — 006</div><div class="meta">Monospace — counters, tags, coordinates · the engineering foil</div></div></div>
+        <div class="typerow"><div class="role">Body</div><div><div class="samp-sans">Readable at length, quiet, gets out of the way of the work.</div><div class="meta">Clean grotesque/sans · long-form legibility</div></div></div>
+        <p style="margin-top:1rem"><span class="tag i">Note</span> &nbsp;The final build should <em>inline</em> a distinctive display face (e.g. a Fraunces-class variable serif) rather than lean on system fonts as this report does under the artifact's CSP.</p>
+
+        <h4>Motion language</h4>
+        <ul>
+          <li><strong>Slow in, fast settle.</strong> An expressive ease (≈ <em class="term">cubic-bezier(.16,1,.3,1)</em>), 0.6–1.2s, generous stagger. Nothing bouncy or "fun" — this is precision, not play.</li>
+          <li><strong>Choreographed load</strong> over scattered effects: one orchestrated page-in sequence, then calm.</li>
+          <li><strong>Reveal by masking</strong> — lines and words rise from clipped containers; images uncover, they don't fade.</li>
+          <li><strong>Reaction, not decoration</strong> — magnetic buttons, a cursor the hero object acknowledges, parallax tied to real depth.</li>
+        </ul>
+
+        <h4>Interaction philosophy</h4>
+        <p>Every section earns <em>one</em> intentional motion or interactive characteristic — no more. The site should feel like an instrument that responds precisely to touch, never a fairground of competing animations. Feedback is immediate and physical; ambient motion is near-zero.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 06 ARCHITECTURE ============ -->
+  <section class="block">
+    <div class="block-grid">
+      <div class="rail">
+        <div class="num">06</div>
+        <span class="eyebrow">Architecture &amp; Strategy</span>
+        <span class="kicker">// how it's built</span>
+      </div>
+      <div class="content">
+        <h2>The pragmatic middle path.</h2>
+        <p class="lead">Lusion's hybrid, not Active Theory's all-WebGL. Accessible DOM for all content; 3D layered in at the hero and one or two accent moments. This is the only architecture that is simultaneously award-caliber, crawlable, and maintainable by one person.</p>
+
+        <h4>Recommended stack</h4>
+        <dl class="spec">
+          <div class="row"><dt>Framework</dt><dd>Next.js (App Router) + TypeScript — SSR/crawlable content, image optimization, routing for project pages.</dd></div>
+          <div class="row"><dt>3D</dt><dd>React Three Fiber + drei + custom GLSL — the R3F ecosystem instead of a bespoke engine.</dd></div>
+          <div class="row"><dt>Motion</dt><dd>GSAP + ScrollTrigger for timelines; a splitting utility for text; Lenis for smooth scroll.</dd></div>
+          <div class="row"><dt>Styling</dt><dd>Modern CSS with custom-property tokens (fluid <em class="term">clamp()</em> scale) — no heavy UI kit.</dd></div>
+          <div class="row"><dt>Ask-before-adding</dt><dd>Every dependency must beat native CSS / Web Animations / GSAP-you-already-have.</dd></div>
+        </dl>
+
+        <h4>Responsive strategy — art-direct, don't shrink</h4>
+        <ul>
+          <li>Test 320 / 375 / 390 / 430 / 768 / 1024 / 1280 / 1440 / 1920 &amp; ultrawide. Each breakpoint is composed, not scaled.</li>
+          <li>Touch replaces cursor interactions; magnetic/hover effects degrade to tap states.</li>
+          <li>WebGL adapts, never simply hides: fewer particles, simpler shader, adjusted camera, capped DPR on mobile.</li>
+          <li>Fluid type via <em class="term">clamp()</em>; <em class="term">svh/dvh</em> for mobile viewport truth; guard against horizontal overflow everywhere.</li>
+        </ul>
+
+        <h4>Performance budget</h4>
+        <ul>
+          <li>Stable 60fps target; correct single <em class="term">requestAnimationFrame</em> loop; no layout thrash.</li>
+          <li>Lazy-load the 3D scene &amp; dynamic-import heavy modules; defer non-critical assets.</li>
+          <li>Dispose Three.js geometries / materials / textures on unmount — no leaks.</li>
+          <li>Watch LCP, INP, CLS; cap devicePixelRatio; compress textures; modern image formats &amp; responsive sizes.</li>
+        </ul>
+
+        <h4>Accessibility</h4>
+        <ul>
+          <li>Semantic HTML, logical heading order, meaningful alt text, keyboard paths, visible focus.</li>
+          <li><em class="term">prefers-reduced-motion</em>: strip large movement &amp; parallax, hold content fully reachable — the WebGL falls back to a still frame.</li>
+          <li>A no-WebGL fallback (a poster image / gradient) so weak GPUs still get a complete site.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 07 EXPERIENCE ============ -->
+  <section class="block">
+    <div class="block-grid">
+      <div class="rail">
+        <div class="num">07</div>
+        <span class="eyebrow">The Experience</span>
+        <span class="kicker">// section by section</span>
+      </div>
+      <div class="content">
+        <h2>A walk through the proposed site.</h2>
+        <div class="exp">
+          <div class="item"><div><h4>Preloader</h4><p>Asset-gated. A large mono counter and a hairline that draws left-to-right; the amber signal ignites at 100% and wipes into the hero. Your signature, your first frame.</p><span class="mv">Motion · asset-driven counter + reveal wipe</span></div></div>
+          <div class="item"><div><h4>Hero — the instrument</h4><p>A cursor-reactive WebGL object (a flowing field / responsive particle form — <em>yours</em>, not an orb) behind a masked serif headline that states who you are. One line of mono "coordinates." The single interactive thesis of the page.</p><span class="mv">Motion · pointer-reactive shader + line-mask reveal</span></div></div>
+          <div class="item"><div><h4>Manifesto / About</h4><p>A scroll-pinned statement where words illuminate to bone as they enter — the "I" voice, in the human serif. Restraint after the hero's energy.</p><span class="mv">Motion · scroll-linked word highlight</span></div></div>
+          <div class="item"><div><h4>Selected Work</h4><p>Project rows stamped with discipline tags (à la Lusion), each with a hover media reveal and a magnetic entry. Numbered, because the set genuinely is an ordered selection.</p><span class="mv">Motion · hover media reveal + magnetic hover</span></div></div>
+          <div class="item"><div><h4>Process / Approach</h4><p>A real sequence — so numbered markers earn their place — showing how you work. Subtle parallax between layers to imply depth.</p><span class="mv">Motion · layered parallax</span></div></div>
+          <div class="item"><div><h4>Capabilities</h4><p>A quiet marquee or grid of tools &amp; disciplines, in mono. Movement present but ambient.</p><span class="mv">Motion · continuous marquee</span></div></div>
+          <div class="item"><div><h4>Contact — final CTA</h4><p>The amber signal returns at full strength around a single magnetic call to action. The one place the palette is loudest, closing the loop the preloader opened.</p><span class="mv">Motion · magnetic CTA + signal accent</span></div></div>
+          <div class="item"><div><h4>Footer</h4><p>Coordinates, socials, colophon in mono. Considered, not an afterthought — the last impression.</p><span class="mv">Static · crafted detail</span></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 08 ROADMAP ============ -->
+  <section class="block">
+    <div class="block-grid">
+      <div class="rail">
+        <div class="num">08</div>
+        <span class="eyebrow">Implementation Roadmap</span>
+        <span class="kicker">// when we build</span>
+      </div>
+      <div class="content">
+        <h2>Order of operations.</h2>
+        <p class="lead">Deliberately sequenced so nothing is built on an unproven foundation. Each phase is shippable and reviewable before the next begins.</p>
+        <div class="phase"><div class="pn">P0</div><div><h4>Direction &amp; content lock</h4><p>You approve (or redirect) this concept; we gather real project content, copy, and personality. No code until the subject is pinned.</p></div></div>
+        <div class="phase"><div class="pn">P1</div><div><h4>Foundation</h4><p>Next.js + TS, token system &amp; fluid type scale, inlined fonts, Lenis, layout shell, accessibility &amp; reduced-motion baseline.</p></div></div>
+        <div class="phase"><div class="pn">P2</div><div><h4>Load choreography</h4><p>Preloader + orchestrated page-in sequence + custom cursor + magnetic primitive.</p></div></div>
+        <div class="phase"><div class="pn">P3</div><div><h4>Structure</h4><p>All sections built in DOM with scroll reveals — fully usable before any 3D exists.</p></div></div>
+        <div class="phase"><div class="pn">P4</div><div><h4>WebGL centerpiece</h4><p>The hero instrument in R3F + GLSL, with its still-frame and no-GL fallbacks.</p></div></div>
+        <div class="phase"><div class="pn">P5</div><div><h4>Responsive art-direction</h4><p>Compose every breakpoint; touch behaviors; overflow &amp; viewport-unit pass.</p></div></div>
+        <div class="phase"><div class="pn">P6</div><div><h4>Performance</h4><p>Profile LCP/INP/CLS &amp; frame time; lazy-load; dispose 3D resources; cap DPR; optimize media.</p></div></div>
+        <div class="phase"><div class="pn">P7</div><div><h4>Audit &amp; polish</h4><p>Accessibility &amp; reduced-motion pass, cross-browser, console/leak check, and a final visual-polish sweep.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <div>END OF TRANSMISSION · VJ-001 · Phase 01 Discovery · Prepared 15 Jul 2026</div>
+    <div style="margin-top:.5rem">No implementation code has been written pending your direction on Section 05.</div>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    var mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var items = document.querySelectorAll('.block, .exp .item, .phase');
+    if (mq.matches || !('IntersectionObserver' in window)) { return; }
+    items.forEach(function (el) { el.classList.add('reveal'); });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
+    items.forEach(function (el) { io.observe(el); });
+  })();
+</script>

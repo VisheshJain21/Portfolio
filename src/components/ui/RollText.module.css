@@ -1,0 +1,46 @@
+.roll {
+  display: inline-flex;
+  overflow: hidden;
+}
+
+.char {
+  position: relative;
+  display: inline-block;
+  white-space: pre;
+}
+
+.top,
+.under {
+  display: block;
+  transition: transform 0.55s var(--ease-out);
+  transition-delay: calc(var(--i) * 0.024s);
+}
+
+.under {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  color: var(--signal);
+}
+
+[data-roll-trigger]:hover .top,
+[data-roll-trigger]:focus-visible .top,
+[data-roll-trigger]:hover .under,
+[data-roll-trigger]:focus-visible .under {
+  transform: translateY(-100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .top,
+  .under {
+    transition: none;
+  }
+  .under {
+    display: none;
+  }
+  [data-roll-trigger]:hover .top,
+  [data-roll-trigger]:focus-visible .top {
+    transform: none;
+    color: var(--signal);
+  }
+}

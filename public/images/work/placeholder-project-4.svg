@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="g" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#161b26"/>
+      <stop offset="100%" stop-color="#0a0d13"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#g)"/>
+  <circle cx="80" cy="50" r="90" fill="#ff6a2b" opacity="0.1"/>
+  <text x="24" y="270" font-family="ui-monospace,monospace" font-size="13" letter-spacing="2" fill="#9aa2b0">PLACEHOLDER — SAFETY-CRITICAL</text>
+</svg>
