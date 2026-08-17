@@ -1,48 +1,48 @@
 "use client";
 
 /**
- * DistortedImagePlane — one project thumbnail rendered as a WebGL plane
- * that ripples toward the cursor on hover (Prompt v3). The DOM card stays
- * a normal element for layout/content/a11y; this plane is positioned to
- * match its rect every frame (see use-dom-rect-sync) and rendered behind
- * it, visually replacing the flat <img> underneath.
+ * ProceduralProjectPlane — one project's procedural motif, rendered as a
+ * WebGL plane synced to its DOM thumb slot every frame. Mirrors
+ * DistortedImagePlane's structure exactly (DOM-rect sync, pointer
+ * uniforms, mesh position/scale) but needs no texture at all, so it's a
+ * separate component rather than a texture-optional branch inside
+ * DistortedImagePlane — no useTexture()/Suspense concern here since
+ * there's nothing that can fail to load.
  *
- * Perf contract: geometry is shared (created once by the parent scene,
- * passed in as a prop); only the material/texture/uniforms are
- * per-instance. All position/uniform writes happen in useFrame — never
- * in the pointer event handlers themselves (those only set targets, see
- * usePointerUniforms) — so hover never triggers a React re-render.
+ * Perf contract, same as DistortedImagePlane: geometry is shared (passed
+ * in as a prop), only per-instance uniforms differ. All uniform writes
+ * happen in useFrame, never in the pointer event handlers.
  */
 
 import { useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { useTexture } from "@react-three/drei";
 import * as THREE from "three";
-import "./image-shader";
-import type { ImageShaderMaterialImpl } from "./types";
+import "./project-shader";
+import type { ProjectShaderMaterialImpl } from "./types";
 import { useDomRectSync } from "./use-dom-rect-sync";
 import { usePointerUniforms } from "./usePointerUniforms";
 
 const LERP = 0.12;
 
-export default function DistortedImagePlane({
+export default function ProceduralProjectPlane({
   domRef,
-  src,
+  motif,
+  seed,
   geometry,
 }: {
   domRef: React.RefObject<HTMLElement | null>;
-  src: string;
+  /** 0=agent-graph, 1=signal-flow, 2=audit-trail, 3=vision-scan — see project-shader.ts. */
+  motif: number;
+  /** Per-instance variation so all 4 motifs don't look identically phased. */
+  seed: number;
   geometry: THREE.PlaneGeometry;
 }) {
-  // useTexture suspends until loaded; a broken/404 image throws, caught by
-  // WorkThumbsGate's ErrorBoundary → falls back to the DOM <img> beneath.
-  const texture = useTexture(src);
   const getRect = useDomRectSync(domRef);
   const pointer = usePointerUniforms(domRef);
   const { size: viewport } = useThree();
 
   const meshRef = useRef<THREE.Mesh>(null);
-  const matRef = useRef<ImageShaderMaterialImpl>(null);
+  const matRef = useRef<ProjectShaderMaterialImpl>(null);
   const strength = useRef(0);
   const uv = useRef({ x: 0.5, y: 0.5 });
 
@@ -51,7 +51,6 @@ export default function DistortedImagePlane({
     const mat = matRef.current;
     if (!mesh || !mat) return;
 
-    // — Position/scale sync: DOM rect → world units (ortho cam = 1:1 px). —
     const r = getRect();
     mesh.position.set(
       r.x + r.width / 2 - viewport.width / 2,
@@ -61,7 +60,6 @@ export default function DistortedImagePlane({
     mesh.scale.set(Math.max(r.width, 0.001), Math.max(r.height, 0.001), 1);
     mesh.visible = r.width > 0 && r.height > 0;
 
-    // — Lerp strength/mouse toward the event-set targets (never snap). —
     strength.current += (pointer.current.hover - strength.current) * LERP;
     uv.current.x += (pointer.current.x - uv.current.x) * LERP;
     uv.current.y += (pointer.current.y - uv.current.y) * LERP;
@@ -73,7 +71,7 @@ export default function DistortedImagePlane({
 
   return (
     <mesh ref={meshRef} geometry={geometry}>
-      <imageShaderMaterial ref={matRef} uMap={texture} transparent />
+      <projectShaderMaterial ref={matRef} uMotif={motif} uSeed={seed} transparent />
     </mesh>
   );
 }

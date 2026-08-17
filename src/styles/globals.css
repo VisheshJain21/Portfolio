@@ -17,6 +17,13 @@ html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   color-scheme: dark;
+  /* Clip horizontal overflow at the ROOT (initial containing block). This is
+     what `body { overflow-x }` cannot do: position:fixed descendants (nav
+     overlay, marquees, warp layers) are clipped by the ICB, not by body, so
+     without this they can push a phantom horizontal scrollbar. `clip` (not
+     `hidden`) preserves position:sticky and doesn't create a scroll container,
+     so vertical/smooth scroll is unaffected. */
+  overflow-x: clip;
 }
 
 /* Lenis smooth-scroll contract */
@@ -37,7 +44,7 @@ body {
   font-family: var(--font-body);
   font-size: var(--step-0);
   line-height: 1.55;
-  overflow-x: hidden;
+  overflow-x: clip; /* upgraded from hidden — see html rule above */
   min-height: 100svh;
 }
 
@@ -53,6 +60,27 @@ main {
   main {
     margin-bottom: var(--footer-h, 260px);
   }
+}
+
+/* ============================================================
+   Responsive invariants — the durable guard so layout can't
+   silently break on resize again. Two commonest failure modes:
+     1. a long unbroken token (URL / id / code) forcing the page
+        wider than the viewport,
+     2. a flex/grid child refusing to shrink below its content.
+   `:where()` = zero specificity, so any component can still
+   override intentionally. Any NEW overflow is caught by the
+   automated breakpoint test (npm run check:responsive).
+   ============================================================ */
+:where(h1, h2, h3, h4, h5, h6, p, li, a, dd, dt, span, blockquote) {
+  overflow-wrap: break-word;
+}
+/* Grid/grid-and-flex layout children default to min-width/height: auto and
+   won't shrink past content — the #1 source of horizontal overflow. Reset
+   it for the flex/grid items inside page sections (opt-out via a component
+   rule if a fixed track is genuinely wanted). */
+:where(main section) :where([class*="grid"], [class*="row"], [class*="list"], [class*="head"]) > * {
+  min-width: 0;
 }
 
 ::selection {
@@ -98,6 +126,18 @@ ol {
 .section {
   position: relative;
   padding-block: var(--section-y);
+}
+
+/* Deliberate rhythm variants — see tokens.css for why the base was cut.
+   Applied selectively so spacing reads as authored pacing (some sections
+   sit close and connected, one or two earn a real breath) instead of one
+   flat gap repeated at every boundary. */
+.section--tight {
+  padding-block: var(--section-y-tight);
+}
+
+.section--loose {
+  padding-block: var(--section-y-loose);
 }
 
 /* ---------- Typography helpers ---------- */

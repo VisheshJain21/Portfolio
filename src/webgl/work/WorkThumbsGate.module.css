@@ -4,3 +4,16 @@
   z-index: var(--z-canvas);
   pointer-events: none;
 }
+
+/* React Three Fiber sets `pointer-events: auto` inline on its own internal
+   wrapper div (for raycasting), which otherwise overrides the inherited
+   `none` above and lets this full-viewport-fixed canvas swallow hover on
+   every element behind it, at every scroll depth. The ripple effect never
+   needs the canvas itself to be hit-testable — usePointerUniforms listens
+   on the real DOM thumb element, not the canvas — so it's safe to force
+   every descendant transparent to pointer events. `!important` is required
+   because it's the only thing that beats a plain (non-important) inline
+   style in the cascade. */
+.wrap * {
+  pointer-events: none !important;
+}

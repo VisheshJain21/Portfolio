@@ -8,10 +8,17 @@
 import { useEffect, useRef } from "react";
 import { revealUp } from "@/animations/reveals";
 import { processSteps } from "@/content/site";
+import { registerAnchor } from "@/lib/section-anchors";
 import styles from "./Process.module.css";
 
 export default function Process() {
   const rootRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    registerAnchor("process", root);
+    return () => registerAnchor("process", null);
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -23,7 +30,7 @@ export default function Process() {
   }, []);
 
   return (
-    <section ref={rootRef} className={`section ${styles.section}`} aria-label="How I work">
+    <section ref={rootRef} className={`section section--tight ${styles.section}`} aria-label="How I work">
       <div className="shell">
         <p className="eyebrow">Approach</p>
         <h2 className={`display ${styles.heading}`}>

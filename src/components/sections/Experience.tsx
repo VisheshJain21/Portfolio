@@ -9,10 +9,17 @@
 import { useEffect, useRef } from "react";
 import { revealUp, drawHairline } from "@/animations/reveals";
 import { experience } from "@/content/site";
+import { registerAnchor } from "@/lib/section-anchors";
 import styles from "./Experience.module.css";
 
 export default function Experience() {
   const rootRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    registerAnchor("experience", root);
+    return () => registerAnchor("experience", null);
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -34,7 +41,7 @@ export default function Experience() {
         </h2>
 
         <ol className={styles.timeline}>
-          <span className={styles.rail} aria-hidden="true" />
+          <span className={styles.rail} aria-hidden="true" data-glow-rail />
           {experience.map((e) => (
             <li key={e.role} className={styles.item}>
               <span className={styles.node} aria-hidden="true" />

@@ -10,9 +10,15 @@
 import { useEffect, useRef, useState } from "react";
 import { revealLines, revealUp } from "@/animations/reveals";
 import { contact } from "@/content/site";
+import { registerAnchor } from "@/lib/section-anchors";
 import Magnetic from "@/components/ui/Magnetic";
 import Icon from "@/components/ui/Icon";
 import styles from "./Contact.module.css";
+
+// A dead 404 on a hiring-focused portfolio is worse than no link at all —
+// flip this once the real PDF lands at public/vishesh-jain-resume.pdf
+// (contact.resume already points there, see content/site.ts's TODO).
+const HAS_RESUME = false;
 
 // Direct channels — each reuses the same Magnetic hook as the email CTA.
 const CHANNELS = [
@@ -20,12 +26,20 @@ const CHANNELS = [
   { label: "LinkedIn", href: contact.linkedin, icon: "linkedin", external: true },
   { label: "Instagram", href: contact.instagram, icon: "instagram", external: true },
   { label: contact.phoneDisplay, href: `tel:${contact.phone}`, icon: "phone" },
-  { label: "Résumé", href: contact.resume, icon: "resume", download: true },
+  ...(HAS_RESUME
+    ? [{ label: "Résumé", href: contact.resume, icon: "resume", download: true } as const]
+    : []),
 ] as const;
 
 export default function Contact() {
   const rootRef = useRef<HTMLElement>(null);
   const [sent, setSent] = useState(false);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    registerAnchor("contact", root);
+    return () => registerAnchor("contact", null);
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -53,7 +67,7 @@ export default function Contact() {
   };
 
   return (
-    <section ref={rootRef} className={`section ${styles.section}`} id="contact" aria-label="Contact">
+    <section ref={rootRef} className={`section section--loose ${styles.section}`} id="contact" aria-label="Contact">
       <div className={`shell ${styles.grid}`}>
         <div className={styles.left}>
           <p className="eyebrow">Contact</p>

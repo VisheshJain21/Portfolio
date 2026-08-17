@@ -1,0 +1,124 @@
+/* Terminal-chip pill, matching the existing badge/status-dot language
+   (mono, thin border, subtle glow — see Nav .status/.dot, Work .badge).
+   Positioned above the footer's measured height (--footer-h, set by
+   Footer.tsx) plus a margin, so it never overlaps the footer's right-side
+   link row even when the footer is fully revealed at the bottom of scroll —
+   both are `position: fixed`, so this offset holds at every scroll position. */
+.widget {
+  position: fixed;
+  right: var(--gutter);
+  bottom: calc(var(--footer-h, 260px) + 1.25rem);
+  z-index: 50; /* above content (5) and canvases (1), below nav (40) is fine
+                  since they never occupy the same screen region; clear of
+                  cursor (80) and preloader (100) by design */
+  display: flex;
+  align-items: center;
+  gap: 0.1rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(13, 17, 25, 0.72);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 0 22px 1px rgba(0, 0, 0, 0.25);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.04em;
+  color: var(--bone-dim);
+}
+
+.segment {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-inline: 0.35rem;
+  cursor: default;
+}
+
+.divider {
+  width: 1px;
+  height: 1.1em;
+  background: var(--line-strong);
+  flex: 0 0 auto;
+}
+
+.likeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0.35rem;
+  border-radius: 999px;
+  color: var(--bone-dim);
+  transition: color 0.3s var(--ease-out);
+}
+
+.likeBtn:hover,
+.likeBtn:focus-visible {
+  color: var(--signal-soft);
+}
+
+.likeBtn[aria-pressed="true"] {
+  color: var(--signal);
+}
+
+.icon {
+  font-size: 0.95em;
+}
+
+.likeBtn[aria-pressed="true"] .icon {
+  filter: drop-shadow(0 0 6px var(--glow));
+}
+
+.count {
+  font-variant-numeric: tabular-nums;
+  min-width: 1ch;
+}
+
+/* Bounce — replays every click via the `key={bump}` remount trick in
+   StatsWidget.tsx, so rapid toggling always restarts cleanly. */
+.heartPop {
+  display: inline-flex;
+  animation: heartBounce 0.2s var(--ease-out);
+}
+
+@keyframes heartBounce {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heartPop {
+    animation: none;
+  }
+}
+
+/* Below 640px a fixed bottom-right pill sits over whatever content
+   happens to scroll underneath it — confirmed overlapping Work's tag
+   chips in practice. It can't dodge every layout, so shrink its
+   footprint hard instead: icon+count only, no divider/gap padding, so
+   any collision covers a sliver rather than a full chip label. */
+@media (max-width: 640px) {
+  .widget {
+    right: 0.75rem;
+    bottom: calc(var(--footer-h, 260px) + 0.85rem);
+    font-size: 0.64rem;
+    padding: 0.32rem 0.45rem;
+    gap: 0;
+  }
+
+  .segment {
+    padding-inline: 0.22rem;
+    gap: 0.25rem;
+  }
+
+  .divider {
+    display: none;
+  }
+}

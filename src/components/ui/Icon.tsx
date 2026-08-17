@@ -11,7 +11,9 @@ type IconName =
   | "instagram"
   | "phone"
   | "resume"
-  | "arrow";
+  | "arrow"
+  | "eye"
+  | "heart";
 
 const STROKE = {
   fill: "none",
@@ -24,9 +26,12 @@ const STROKE = {
 export default function Icon({
   name,
   className,
+  filled,
 }: {
   name: IconName;
   className?: string;
+  /** heart only: outline at rest, solid when true (the "liked" state). */
+  filled?: boolean;
 }) {
   return (
     <svg
@@ -77,6 +82,22 @@ export default function Icon({
         <g {...STROKE}>
           <path d="M7 17 17 7M9 7h8v8" />
         </g>
+      )}
+      {name === "eye" && (
+        <g {...STROKE}>
+          <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z" />
+          <circle cx="12" cy="12" r="3" />
+        </g>
+      )}
+      {name === "heart" && (
+        <path
+          d="M12 20.5s-7.5-4.6-9.9-9.3C.6 7.9 2.1 4.5 5.4 3.8c2-.4 3.9.6 4.9 2.3.2.3.6.3.8 0 1-1.7 2.9-2.7 4.9-2.3 3.3.7 4.8 4.1 3.3 7.4-2.4 4.7-9.9 9.3-9.9 9.3Z"
+          fill={filled ? "currentColor" : "none"}
+          stroke="currentColor"
+          strokeWidth={filled ? 0 : 1.6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
       )}
     </svg>
   );

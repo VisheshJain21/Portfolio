@@ -5,6 +5,7 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import Cursor from "@/components/ui/Cursor";
 import Preloader from "@/components/ui/Preloader";
 import WarpCutClient from "@/components/ui/WarpCutClient";
+import StatsWidget from "@/components/ui/StatsWidget";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -61,6 +62,7 @@ export default function RootLayout({
         <SmoothScroll />
         <Cursor />
         <WarpCutClient />
+        <StatsWidget />
         <div className="vignette" aria-hidden="true" />
         <div className="grain" aria-hidden="true" />
         {children}

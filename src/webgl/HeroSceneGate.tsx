@@ -16,40 +16,18 @@
  *  - On `webglcontextrestored` we remount the scene (key bump) for a clean
  *    rebuild. Only after repeated, unrecovered losses do we give up on WebGL
  *    and drop bloom, then finally the canvas — never a blank rectangle.
- *  - A global `window.onerror` net catches the one class of failure the
- *    <ErrorBoundary> below structurally cannot: errors thrown from React's
- *    own concurrent scheduler tick (`performWorkUntilDeadline`), which
- *    happen outside any component's render call stack and so never reach
- *    a boundary. In dev this shows up as a Fast-Refresh-triggered
- *    "Converting circular structure to JSON" from the R3F reconciler
- *    (a Three.js object's parent/children cycle getting stringified by
- *    HMR's prop-diffing after a hot-reloaded module changes a registered
- *    element's class identity) — harmless to the shipped build, since
- *    Turbopack's HMR machinery doesn't exist in `next start`, but if left
- *    uncaught it can leave the fiber tree mid-commit and the page inert.
- *    We degrade to the static glow rather than let the page go dead.
  */
 
 import dynamic from "next/dynamic";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ErrorBoundary from "@/components/ui/ErrorBoundary";
+import { useDeviceTier } from "@/hooks/useDeviceTier";
 import { useSiteReady } from "@/hooks/useSiteReady";
+import { useNavOverlayOpen } from "@/lib/nav-overlay";
 import { warpFX } from "@/lib/warp-fx";
 import styles from "./HeroSceneGate.module.css";
 
 const HeroScene = dynamic(() => import("./HeroScene"), { ssr: false });
-
-function supportsWebGL(): boolean {
-  try {
-    const canvas = document.createElement("canvas");
-    return !!(
-      window.WebGLRenderingContext &&
-      (canvas.getContext("webgl2") || canvas.getContext("webgl"))
-    );
-  } catch {
-    return false;
-  }
-}
 
 export default function HeroSceneGate() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -59,26 +37,28 @@ export default function HeroSceneGate() {
   const [bloom, setBloom] = useState(true);
   const lossCount = useRef(0);
   const ready = useSiteReady();
+  const tier = useDeviceTier();
+  const navOverlayOpen = useNavOverlayOpen();
   // Paused (frameloop "never") until the loader clears AND we're on-screen:
   // no WebGL renders behind the black loading screen; resumes at exit.
-  const paused = !ready || !inView;
+  // Also pauses while the mobile nav overlay covers the whole viewport —
+  // the canvas is 100% hidden behind it either way, so this is free.
+  const paused = !ready || !inView || navOverlayOpen;
 
   // Publish the live quality tier so the Warp Cut controller can gate
-  // its shader spike / shock ring on the same signal as the hero bloom.
+  // its shock ring on the same signal as the hero bloom.
   useEffect(() => {
     warpFX.gpuTier = mode === "full" && bloom ? "high" : "low";
   }, [mode, bloom]);
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const coarse = window.matchMedia("(pointer: coarse)").matches;
-    const narrow = window.innerWidth < 720;
-    if (reduced || !supportsWebGL()) {
+    if (!tier) return; // not measured yet — stay "pending"
+    if (tier.reducedMotion || !tier.webgl) {
       setMode("static");
       return;
     }
-    setMode(coarse || narrow ? "mobile" : "full");
-  }, []);
+    setMode(tier.mobile ? "mobile" : "full");
+  }, [tier]);
 
   // Pause (don't unmount) when off-screen — keeps the single context alive.
   useEffect(() => {
@@ -103,38 +83,6 @@ export default function HeroSceneGate() {
     // Rebuild the scene cleanly on the restored context.
     setSceneKey((k) => k + 1);
   }, []);
-
-  // Global net for scheduler-level errors an ErrorBoundary can't see (see
-  // the file header). Narrowly matched so unrelated app errors pass through
-  // untouched — this only reacts to the R3F/circular-structure signature.
-  useEffect(() => {
-    if (mode === "static") return;
-    const isSchedulerCircularity = (msg: string, stack?: string) =>
-      /circular structure|cyclic structures/i.test(msg) &&
-      /react-three-fiber|performWorkUntilDeadline/i.test(stack ?? msg);
-
-    const onError = (e: ErrorEvent) => {
-      if (isSchedulerCircularity(e.message ?? "", e.error?.stack)) {
-        // eslint-disable-next-line no-console
-        console.warn("HeroSceneGate: recovered from an uncaught scheduler error.");
-        setMode("static");
-      }
-    };
-    const onRejection = (e: PromiseRejectionEvent) => {
-      const reason = e.reason;
-      const msg = typeof reason === "string" ? reason : (reason?.message ?? "");
-      if (isSchedulerCircularity(msg, reason?.stack)) {
-        console.warn("HeroSceneGate: recovered from an uncaught scheduler rejection.");
-        setMode("static");
-      }
-    };
-    window.addEventListener("error", onError);
-    window.addEventListener("unhandledrejection", onRejection);
-    return () => {
-      window.removeEventListener("error", onError);
-      window.removeEventListener("unhandledrejection", onRejection);
-    };
-  }, [mode]);
 
   const showCanvas = mode === "full" || mode === "mobile";
 

@@ -14,11 +14,6 @@
  *    doesn't mount; the DOM <img> already under each plane (rendered by
  *    Work.tsx regardless) is what shows — the fallback is "free" because
  *    the DOM card exists independent of whether WebGL is available.
- *  - a global `window.onerror` net catches scheduler-level errors an
- *    ErrorBoundary structurally cannot (see HeroSceneGate's file header
- *    for the full explanation) — this canvas uses the same extend()-based
- *    custom-material pattern, so it's equally exposed to the dev-only
- *    HMR/circular-JSON class of crash.
  *
  * The wrapper is `position: fixed; inset: 0` so DOM getBoundingClientRect()
  * results (viewport-relative) map 1:1 onto canvas pixel space with no
@@ -31,23 +26,13 @@ import dynamic from "next/dynamic";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useCallback, useEffect, useState } from "react";
 import ErrorBoundary from "@/components/ui/ErrorBoundary";
+import { useDeviceTier } from "@/hooks/useDeviceTier";
 import { useSiteReady } from "@/hooks/useSiteReady";
+import { useNavOverlayOpen } from "@/lib/nav-overlay";
 import type { ThumbTarget } from "./WorkThumbsScene";
 import styles from "./WorkThumbsGate.module.css";
 
 const WorkThumbsScene = dynamic(() => import("./WorkThumbsScene"), { ssr: false });
-
-function supportsWebGL(): boolean {
-  try {
-    const canvas = document.createElement("canvas");
-    return !!(
-      window.WebGLRenderingContext &&
-      (canvas.getContext("webgl2") || canvas.getContext("webgl"))
-    );
-  } catch {
-    return false;
-  }
-}
 
 export default function WorkThumbsGate({
   sectionRef,
@@ -61,14 +46,17 @@ export default function WorkThumbsGate({
   const [inView, setInView] = useState(false);
   const [broken, setBroken] = useState(false);
   const ready = useSiteReady();
+  const tier = useDeviceTier();
+  const navOverlayOpen = useNavOverlayOpen();
   // Paused until the loader clears AND the Work section is on-screen —
   // same context-safe pattern as the hero (never renders behind the loader).
-  const paused = !ready || !inView;
+  // Also pauses while the mobile nav overlay covers the whole viewport.
+  const paused = !ready || !inView || navOverlayOpen;
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    setEnabled(!reduced && supportsWebGL());
-  }, []);
+    if (!tier) return;
+    setEnabled(!tier.reducedMotion && tier.webgl);
+  }, [tier]);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -82,36 +70,6 @@ export default function WorkThumbsGate({
 
   const onError = useCallback(() => setBroken(true), []);
 
-  // Same narrowly-scoped global net as HeroSceneGate — degrades to the
-  // DOM <img> fallback instead of letting a scheduler-level crash go uncaught.
-  useEffect(() => {
-    if (!enabled || broken) return;
-    const isSchedulerCircularity = (msg: string, stack?: string) =>
-      /circular structure|cyclic structures/i.test(msg) &&
-      /react-three-fiber|performWorkUntilDeadline/i.test(stack ?? msg);
-
-    const onWinError = (e: ErrorEvent) => {
-      if (isSchedulerCircularity(e.message ?? "", e.error?.stack)) {
-        console.warn("WorkThumbsGate: recovered from an uncaught scheduler error.");
-        setBroken(true);
-      }
-    };
-    const onRejection = (e: PromiseRejectionEvent) => {
-      const reason = e.reason;
-      const msg = typeof reason === "string" ? reason : (reason?.message ?? "");
-      if (isSchedulerCircularity(msg, reason?.stack)) {
-        console.warn("WorkThumbsGate: recovered from an uncaught scheduler rejection.");
-        setBroken(true);
-      }
-    };
-    window.addEventListener("error", onWinError);
-    window.addEventListener("unhandledrejection", onRejection);
-    return () => {
-      window.removeEventListener("error", onWinError);
-      window.removeEventListener("unhandledrejection", onRejection);
-    };
-  }, [enabled, broken]);
-
   if (!enabled || broken) return null;
 
   return (
@@ -119,7 +77,11 @@ export default function WorkThumbsGate({
       <ErrorBoundary fallback={null} onError={onError}>
         <Canvas
           orthographic
-          dpr={[1, 1.5]}
+          // Mobile now actually renders all 4 planes (the stacked-card
+          // treatment replaced the old display:none-on-mobile thumb,
+          // which previously meant zero planes ever rendered here below
+          // 820px) — cap DPR lower on mobile, same pattern as WorldGate.
+          dpr={tier?.mobile ? [1, 1.25] : [1, 1.5]}
           frameloop={paused ? "never" : "always"}
           gl={{ antialias: true, alpha: true, powerPreference: "default" }}
           style={{ position: "absolute", inset: 0 }}

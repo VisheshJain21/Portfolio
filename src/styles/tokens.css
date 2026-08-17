@@ -35,9 +35,17 @@
   --step-4: clamp(2.8rem, 1.7rem + 5.4vw, 6.2rem);
   --step-5: clamp(3.6rem, 1rem + 13vw, 11.5rem);
 
-  /* — Rhythm — */
+  /* — Rhythm —
+     `--section-y` was clamp(5.5rem, 12vw, 11rem) = ~173px/side at 1440px.
+     Stacked across 9 section boundaries that produced ~350px of literal
+     void per boundary (~3 screens of nothing on a 9.8-screen page) — the
+     measured root cause of the site reading as "empty". Tightened ~40%,
+     with explicit tight/loose variants so spacing becomes a deliberate
+     rhythm instead of one uniform gap repeated nine times. */
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
-  --section-y: clamp(5.5rem, 12vw, 11rem);
+  --section-y: clamp(3.25rem, 7vw, 6.5rem);
+  --section-y-tight: clamp(2rem, 4.5vw, 4rem);
+  --section-y-loose: clamp(4.5rem, 10vw, 9rem);
   --maxw: 1560px;
 
   /* — Motion — */

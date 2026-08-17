@@ -30,6 +30,11 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--bone-dim);
+  transition: color 0.3s var(--ease-out);
+}
+
+.fact:hover {
+  color: var(--bone);
 }
 
 .factDot {
@@ -39,6 +44,12 @@
   background: var(--signal);
   box-shadow: 0 0 10px 1px var(--glow);
   flex: 0 0 auto;
+  transition: box-shadow 0.3s var(--ease-out), transform 0.3s var(--ease-out);
+}
+
+.fact:hover .factDot {
+  box-shadow: 0 0 16px 3px var(--glow);
+  transform: scale(1.3);
 }
 
 .right {

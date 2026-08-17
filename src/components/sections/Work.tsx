@@ -23,7 +23,8 @@ export default function Work() {
     () =>
       projects.map((p) => ({
         key: p.index,
-        src: p.thumb,
+        motif: p.motif,
+        seed: p.seed,
         domRef: {
           get current() {
             return thumbRefs.current[p.index] ?? null;
@@ -49,7 +50,7 @@ export default function Work() {
   }, []);
 
   return (
-    <section ref={rootRef} className="section" id="work" aria-label="Selected work">
+    <section ref={rootRef} className="section section--loose" id="work" aria-label="Selected work">
       <WorkThumbsGate sectionRef={rootRef} targets={targets} />
       <div className="shell">
         <div className={styles.head}>
@@ -84,11 +85,12 @@ export default function Work() {
                   )}
                   <span className={styles.index}>{p.index}</span>
                   {/* Thumb slot — a normal DOM element for layout/a11y.
-                      WorkThumbsGate positions a WebGL ripple-plane exactly
-                      over it every frame; this <img> is what shows if
-                      WebGL is unavailable, reduced-motion, or the plane's
-                      texture fails to load (fallback is "free" — the DOM
-                      card exists regardless). */}
+                      WorkThumbsGate positions a procedural WebGL motif
+                      exactly over it every frame (webgl/work/project-shader.ts,
+                      no texture — can't fail to load); this <img> is the
+                      fallback shown only when WebGL is unavailable or
+                      reduced-motion is set, hand-drawn to echo the same
+                      motif so the two states tell the same visual story. */}
                   <div
                     ref={(el) => {
                       thumbRefs.current[p.index] = el;

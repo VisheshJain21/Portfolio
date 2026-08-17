@@ -24,9 +24,7 @@ import {
   Noise,
 } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
-import type { ChromaticAberrationEffect, NoiseEffect } from "postprocessing";
 import * as THREE from "three";
-import { warpFX } from "@/lib/warp-fx";
 
 const SIGNAL = new THREE.Color("#ff6a2b");
 const BONE = new THREE.Color("#ece7de");
@@ -149,7 +147,7 @@ function AgentField({ count, mobile }: { count: number; mobile: boolean }) {
         <Line
           key={i}
           // plain tuples, not Vector3s — keeps circular Three objects out
-          // of JSX props (see WarpFXDriver note)
+          // of JSX props that dev tooling might try to serialize
           points={[
             nodes[a].basePos.toArray() as [number, number, number],
             nodes[b].basePos.toArray() as [number, number, number],
@@ -237,35 +235,6 @@ function ResumeKick({ paused }: { paused: boolean }) {
   return null;
 }
 
-/** Reads the warp FX bus each frame: spikes chromatic aberration + grain
- *  during a Warp Cut impact, then decays them back to baseline (single
- *  writer of the decay). No React re-renders involved. */
-function WarpFXDriver({
-  caRef,
-  noiseRef,
-  baseCA,
-}: {
-  caRef: React.RefObject<ChromaticAberrationEffect | null>;
-  noiseRef: React.RefObject<NoiseEffect | null>;
-  /** Plain values, not a THREE.Vector2 — Three objects hold circular
-   *  parent/child refs and must never ride through JSX props where dev
-   *  tooling may serialize them ("Converting circular structure to JSON"). */
-  baseCA: { x: number; y: number };
-}) {
-  useFrame(() => {
-    const s = warpFX.spike;
-    const ca = caRef.current;
-    if (ca) {
-      ca.offset.x = baseCA.x * (1 + s * 16);
-      ca.offset.y = baseCA.y * (1 + s * 16);
-    }
-    const noise = noiseRef.current;
-    if (noise) noise.blendMode.opacity.value = 0.32 + s * 0.55;
-    if (s > 0) warpFX.spike = s < 0.01 ? 0 : s * 0.92;
-  });
-  return null;
-}
-
 /** Camera: cursor parallax + scroll-driven dolly-out and lift.
  *  On mobile the base distance is larger so the core doesn't swamp the
  *  full-width copy behind it. */
@@ -303,12 +272,6 @@ export default function HeroScene({
   const dpr = useMemo<[number, number]>(() => [1, mobile ? 1.25 : 1.5], [mobile]);
   const useBloom = bloom && !mobile;
   const usePointer = interactive && !paused;
-  // Subtle lens fringing at the frame edges — the "expensive optics" cue.
-  // Plain base values; the Vector2 exists only for the effect's uniform.
-  const CA_BASE = { x: 0.0007, y: 0.0005 };
-  const caOffset = useMemo(() => new THREE.Vector2(CA_BASE.x, CA_BASE.y), []); // eslint-disable-line react-hooks/exhaustive-deps
-  const caRef = useRef<ChromaticAberrationEffect | null>(null);
-  const noiseRef = useRef<NoiseEffect | null>(null);
 
   return (
     <Canvas
@@ -342,20 +305,12 @@ export default function HeroScene({
       </Suspense>
       <CameraRig interactive={usePointer} mobile={mobile} />
       {useBloom && (
-        <>
-          <EffectComposer multisampling={0}>
-            <Bloom intensity={0.75} luminanceThreshold={0.2} luminanceSmoothing={0.3} />
-            <ChromaticAberration
-              ref={caRef}
-              offset={caOffset}
-              radialModulation={false}
-              modulationOffset={0}
-            />
-            <Noise ref={noiseRef} premultiply blendFunction={BlendFunction.OVERLAY} opacity={0.32} />
-            <Vignette eskil={false} offset={0.15} darkness={0.62} />
-          </EffectComposer>
-          <WarpFXDriver caRef={caRef} noiseRef={noiseRef} baseCA={CA_BASE} />
-        </>
+        <EffectComposer multisampling={0}>
+          <Bloom intensity={0.75} luminanceThreshold={0.2} luminanceSmoothing={0.3} />
+          <ChromaticAberration offset={[0.0007, 0.0005]} radialModulation={false} modulationOffset={0} />
+          <Noise premultiply blendFunction={BlendFunction.OVERLAY} opacity={0.32} />
+          <Vignette eskil={false} offset={0.15} darkness={0.62} />
+        </EffectComposer>
       )}
       <ResumeKick paused={paused} />
       <ClearGuard composerActive={useBloom} />

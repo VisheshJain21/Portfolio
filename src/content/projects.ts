@@ -16,7 +16,15 @@ export type Project = {
   links?: { label: string; href: string }[];
   confidential?: boolean;
   highlight: string; // the one number/fact that stops a recruiter
-  thumb: string; // WebGL distortion-plane texture (Prompt v3)
+  // Primary visual is now a procedural WebGL motif (see webgl/work/project-shader.ts)
+  // matching what each project actually does — no real screenshot needed,
+  // which also sidesteps the confidentiality issue on the 2 employer projects.
+  motif: 0 | 1 | 2 | 3; // 0 agent-graph · 1 signal-flow · 2 audit-trail · 3 vision-scan
+  seed: number; // per-instance variation so motifs don't look identically phased
+  // Fallback only — shown when WebGL/JS is unavailable or reduced-motion is
+  // set (WorkThumbsGate doesn't mount in either case). Redrawn to echo each
+  // project's WebGL motif rather than a generic gradient.
+  thumb: string;
 };
 
 export const projects: Project[] = [
@@ -36,7 +44,8 @@ export const projects: Project[] = [
       },
     ],
     highlight: "Detect → fix → validate, end-to-end without a human",
-    // TODO(vishesh): replace with a real OpenClaw screenshot/GIF
+    motif: 0,
+    seed: 0.15,
     thumb: "/images/work/placeholder-project-1.svg",
   },
   {
@@ -50,7 +59,8 @@ export const projects: Project[] = [
     stack: ["Python", "FastAPI", "Selenium", "SQLite", "Node.js"],
     confidential: true,
     highlight: "948 tests green · self-healing agent team · in production",
-    // TODO(vishesh): replace with a sanitized dashboard screenshot
+    motif: 1,
+    seed: 0.62,
     thumb: "/images/work/placeholder-project-2.svg",
   },
   {
@@ -70,7 +80,8 @@ export const projects: Project[] = [
       { label: "Live demo", href: "https://project-q6s55.vercel.app" },
     ],
     highlight: "Full stack, real-time, deployed",
-    // TODO(vishesh): replace with a real NEXUS screenshot/GIF
+    motif: 2,
+    seed: 0.37,
     thumb: "/images/work/placeholder-project-3.svg",
   },
   {
@@ -84,7 +95,8 @@ export const projects: Project[] = [
     stack: ["Python", "Playwright", "LLM vision", "Zoho API"],
     confidential: true,
     highlight: "One attempt, zero retries — engineered fail-closed",
-    // TODO(vishesh): replace with a sanitized ops-dashboard screenshot
+    motif: 3,
+    seed: 0.84,
     thumb: "/images/work/placeholder-project-4.svg",
   },
 ];
