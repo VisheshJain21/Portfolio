@@ -30,7 +30,7 @@ export default function Process() {
   }, []);
 
   return (
-    <section ref={rootRef} className={`section section--tight ${styles.section}`} aria-label="How I work">
+    <section ref={rootRef} className={`section section--tight ${styles.section}`} id="process" aria-label="How I work">
       <div className="shell">
         <p className="eyebrow">Approach</p>
         <h2 className={`display ${styles.heading}`}>

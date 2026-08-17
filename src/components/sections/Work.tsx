@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useMemo, useRef } from "react";
-import { revealUp, drawHairline } from "@/animations/reveals";
+import { revealUp, drawHairline, splitChars, revealSnap } from "@/animations/reveals";
 import { projects, workMeta } from "@/content/projects";
 import WorkThumbsGate from "@/webgl/work/WorkThumbsGate";
 import type { ThumbTarget } from "@/webgl/work/WorkThumbsScene";
@@ -44,6 +44,8 @@ export default function Work() {
     rows.forEach((row) => revealUp(row, row, { y: 44 }));
     const head = root.querySelector<HTMLElement>(`.${styles.head}`);
     if (head) revealUp(head, head, { y: 24 });
+    const heading = root.querySelector<HTMLElement>(`.${styles.heading}`);
+    if (heading) revealSnap(splitChars(heading), heading, { stagger: 0.045, start: "top 80%" });
     root
       .querySelectorAll<HTMLElement>("[data-hairline]")
       .forEach((el) => drawHairline(el));
@@ -72,6 +74,7 @@ export default function Work() {
                 <div
                   className={styles.row}
                   data-cursor-view={!primaryLink ? "Confidential" : undefined}
+                  data-fault-trigger={p.index === "04" ? "" : undefined}
                 >
                   {primaryLink && (
                     <a

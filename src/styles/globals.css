@@ -297,6 +297,18 @@ body[data-cursor="on"] button {
   cursor: none;
 }
 
+/* Fault-and-heal signature moment (components/ui/FaultSequence.tsx) —
+   every component already reads --signal/--signal-soft/--glow via CSS var,
+   so swapping the token value here recolors every amber accent site-wide
+   for free, with zero component changes. Transitioned so the swap itself
+   reads as part of the glitch rather than a hard cut. */
+body.is-fault {
+  --signal: var(--fault);
+  --signal-soft: var(--fault);
+  --glow: var(--fault-glow);
+  transition: color 0.4s var(--ease-out);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

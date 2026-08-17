@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { revealLines, revealUp } from "@/animations/reveals";
+import { revealUp, revealSnap } from "@/animations/reveals";
 import { contact } from "@/content/site";
 import { registerAnchor } from "@/lib/section-anchors";
 import Magnetic from "@/components/ui/Magnetic";
@@ -46,7 +46,11 @@ export default function Contact() {
     if (!root) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
-    revealLines(root, { onScroll: true });
+    // Snap the two whole line-mask boxes in (not their .line-inner children —
+    // those sit inside an overflow:hidden mask built for a pure Y-translate;
+    // scaling/rotating the clipped child would clip its own edges mid-tween).
+    const lines = root.querySelectorAll<HTMLElement>(".line-mask");
+    if (lines.length) revealSnap(lines, root, { stagger: 0.12, start: "top 78%" });
     const meta = root.querySelectorAll<HTMLElement>("[data-contact-fade]");
     revealUp(meta, root, { stagger: 0.08, start: "top 72%" });
   }, []);

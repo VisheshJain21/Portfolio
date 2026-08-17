@@ -38,30 +38,18 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useDeviceTier } from "@/hooks/useDeviceTier";
+import { faultFX, FAULT_DURATION_MS, faultEnvelope } from "@/lib/fault-bus";
 import "../spine-shader";
+import { SECTION_ORDER, columnScreenX, worldY, nodeWobbleX, NODE_Y_OFFSET } from "../spine-geometry";
+import { spineHover } from "../spine-hover";
+import type { SpineNodeMaterial } from "../spine-shader";
 import type { SectionKey, SectionProgress } from "../types";
 
 const AMBER = new THREE.Color("#ff6a2b"); // --signal
-const SECTION_ORDER: SectionKey[] = [
-  "manifesto",
-  "proof",
-  "experience",
-  "process",
-  "capabilities",
-  "contact",
-];
+const FAULT_COLOR = new THREE.Color("#ff3355"); // --fault
 const NUM_NODES = SECTION_ORDER.length;
 const NUM_PULSES = NUM_NODES - 1;
 const TOTAL_INSTANCES = NUM_NODES + NUM_PULSES;
-
-const MAXW = 1560; // mirrors tokens.css --maxw
-function gutterPx(vw: number) {
-  return Math.min(56, Math.max(20, vw * 0.04)); // mirrors --gutter's clamp(1.25rem,4vw,3.5rem)
-}
-function columnScreenX(vw: number) {
-  const g = gutterPx(vw);
-  return Math.max(g, (vw - MAXW) / 2 + g); // left edge of .shell's content box
-}
 
 export default function SpineLayer({
   getSectionProgress,
@@ -69,6 +57,7 @@ export default function SpineLayer({
   getSectionProgress: () => ReadonlyMap<SectionKey, SectionProgress>;
 }) {
   const meshRef = useRef<THREE.InstancedMesh>(null);
+  const matRef = useRef<SpineNodeMaterial>(null);
   const tier = useDeviceTier();
 
   const nodeX = useRef(new Float32Array(NUM_NODES));
@@ -102,12 +91,19 @@ export default function SpineLayer({
     const colX = columnScreenX(vw);
     const t = clock.elapsedTime;
 
+    // Fault-and-heal color: reads the bus directly (performance.now()-based,
+    // independent of this canvas's own clock) — see lib/fault-bus.ts.
+    const faultT = faultFX.active ? (performance.now() - faultFX.startedAt) / FAULT_DURATION_MS : 0;
+    const faultIntensity = faultFX.active ? faultEnvelope(faultT) : 0;
+    if (matRef.current) matRef.current.uColor.copy(AMBER).lerp(FAULT_COLOR, faultIntensity);
+    (lineObj.material as THREE.LineBasicMaterial).color.copy(AMBER).lerp(FAULT_COLOR, faultIntensity);
+
     for (let i = 0; i < NUM_NODES; i++) {
       const p = progress.get(SECTION_ORDER[i]);
       if (!p) continue;
-      const screenY = p.rect.y + 110;
-      const targetY = vh / 2 - screenY;
-      const targetX = colX - vw / 2 + Math.sin(targetY * 0.01 + i * 1.7) * 9 + Math.sin(t * 0.35 + i * 2.3) * 3;
+      const screenY = p.rect.y + NODE_Y_OFFSET;
+      const targetY = worldY(vh, screenY);
+      const targetX = colX - vw / 2 + nodeWobbleX(targetY, i) + Math.sin(t * 0.35 + i * 2.3) * 3;
 
       if (!seeded.current[i]) {
         nodeX.current[i] = targetX;
@@ -117,7 +113,8 @@ export default function SpineLayer({
         nodeX.current[i] += (targetX - nodeX.current[i]) * 0.1;
         nodeY.current[i] += (targetY - nodeY.current[i]) * 0.1;
       }
-      nodeActive.current[i] = p.inView ? Math.max(0, 1 - Math.abs(p.progress - 0.5) * 2) : 0;
+      const baseActive = p.inView ? Math.max(0, 1 - Math.abs(p.progress - 0.5) * 2) : 0;
+      nodeActive.current[i] = spineHover.index === i ? Math.max(baseActive, 0.85) : baseActive;
     }
 
     for (let i = 0; i < NUM_NODES; i++) {
@@ -162,7 +159,7 @@ export default function SpineLayer({
       <primitive object={lineObj} />
       <instancedMesh ref={meshRef} args={[undefined, undefined, TOTAL_INSTANCES]}>
         <planeGeometry args={[1, 1]} />
-        <spineNodeMaterial uColor={AMBER} uOpacity={0.75} transparent depthWrite={false} />
+        <spineNodeMaterial ref={matRef} uColor={AMBER} uOpacity={0.75} transparent depthWrite={false} />
       </instancedMesh>
     </>
   );

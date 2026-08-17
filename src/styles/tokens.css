@@ -19,6 +19,10 @@
   --signal: #ff6a2b;
   --signal-soft: #ff8b57;
   --glow: rgba(255, 106, 43, 0.16);
+  /* Cold counter-accent — appears only during the fault-and-heal sequence
+     (webgl/world/FaultSequence.tsx), never as a standing UI color. */
+  --fault: #ff3355;
+  --fault-glow: rgba(255, 51, 85, 0.22);
 
   /* — Type families (populated by next/font in layout.tsx) — */
   --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;

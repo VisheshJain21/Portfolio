@@ -6,6 +6,7 @@ import Cursor from "@/components/ui/Cursor";
 import Preloader from "@/components/ui/Preloader";
 import WarpCutClient from "@/components/ui/WarpCutClient";
 import StatsWidget from "@/components/ui/StatsWidget";
+import SoundToggle from "@/components/ui/SoundToggle";
 
 const fraunces = Fraunces({
   variable: "--font-fraunces",
@@ -63,6 +64,7 @@ export default function RootLayout({
         <Cursor />
         <WarpCutClient />
         <StatsWidget />
+        <SoundToggle />
         <div className="vignette" aria-hidden="true" />
         <div className="grain" aria-hidden="true" />
         {children}

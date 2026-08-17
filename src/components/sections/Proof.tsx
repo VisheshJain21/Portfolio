@@ -44,7 +44,7 @@ export default function Proof() {
   }, []);
 
   return (
-    <section ref={rootRef} className={styles.section} aria-label="Track record">
+    <section ref={rootRef} className={styles.section} id="proof" aria-label="Track record">
       <div className={`shell ${styles.grid}`}>
         {proofStats.map((s) => (
           <div key={s.label} className={styles.cell} data-glow-cell>

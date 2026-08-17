@@ -50,7 +50,7 @@ export default function Manifesto() {
   }, []);
 
   return (
-    <section ref={rootRef} className={`section section--tight ${styles.section}`} aria-label="Manifesto">
+    <section ref={rootRef} className={`section section--tight ${styles.section}`} id="manifesto" aria-label="Manifesto">
       <div className="shell">
         <p className="eyebrow">{manifesto.eyebrow}</p>
         <p className={`display ${styles.statement}`}>

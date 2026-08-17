@@ -1,0 +1,36 @@
+/* A small, purpose-built full-viewport wash — NOT applied to real page
+   content. Filtering #site-main directly (thousands of px of complex,
+   WebGL-laden DOM) blew the scroll-perf budget in testing; a simple flat
+   div is cheap to distort regardless of how tall/complex the real page
+   is, matching warp-cut's own "filter a purpose-built panel, never real
+   content" discipline. */
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 6;
+  background: var(--fault-glow);
+  mix-blend-mode: screen;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.caption {
+  position: absolute;
+  right: 0.5rem;
+  bottom: 0.5rem;
+  z-index: 2;
+  color: var(--fault);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+@media (max-width: 820px) {
+  .caption {
+    position: static;
+    display: block;
+    margin-top: 0.75rem;
+  }
+}

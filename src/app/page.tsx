@@ -10,6 +10,8 @@ import Process from "@/components/sections/Process";
 import Capabilities from "@/components/sections/Capabilities";
 import Contact from "@/components/sections/Contact";
 import WorldGate from "@/webgl/world/WorldGate";
+import SpineNodesOverlay from "@/components/ui/SpineNodesOverlay";
+import FaultSequence from "@/components/ui/FaultSequence";
 
 export default function Home() {
   return (
@@ -27,6 +29,8 @@ export default function Home() {
         <Contact />
       </main>
       <WorldGate />
+      <SpineNodesOverlay />
+      <FaultSequence />
       <Footer />
     </>
   );
