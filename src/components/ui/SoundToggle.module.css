@@ -1,0 +1,47 @@
+/* Mirrors StatsWidget's fixed positioning discipline exactly (opposite
+   corner) — sits above the footer's measured height so it never overlaps
+   the footer's own content at any scroll position. */
+.btn {
+  position: fixed;
+  left: var(--gutter);
+  bottom: calc(var(--footer-h, 260px) + 1.25rem);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(13, 17, 25, 0.72);
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 0 22px 1px rgba(0, 0, 0, 0.25);
+  color: var(--bone-dim);
+  transition:
+    color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+
+.btn:hover,
+.btn:focus-visible {
+  color: var(--signal-soft);
+  border-color: var(--signal-soft);
+}
+
+.btn[aria-pressed="true"] {
+  color: var(--signal);
+}
+
+.icon {
+  font-size: 1.1em;
+}
+
+@media (max-width: 640px) {
+  .btn {
+    left: 0.75rem;
+    bottom: calc(var(--footer-h, 260px) + 0.85rem);
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+}

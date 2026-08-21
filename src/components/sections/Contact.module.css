@@ -1,11 +1,11 @@
 .section {
   border-top: 1px solid var(--line);
-  background: radial-gradient(
-    90% 70% at 50% 115%,
-    rgba(255, 106, 43, 0.08),
-    transparent 70%
-  );
 }
+
+/* Ambient glow is now the real GPU molten-core echo from
+   webgl/world/layers/ContactLayer.tsx (World canvas) — replaces what
+   used to be a static CSS radial-gradient here, same bottom-center
+   anchor. */
 
 .grid {
   display: grid;
@@ -139,6 +139,11 @@
   padding: 0.75rem 0.9rem;
   resize: vertical;
   transition: border-color 0.3s var(--ease-out);
+}
+
+.field input:hover,
+.field textarea:hover {
+  border-color: var(--bone-faint);
 }
 
 .field input:focus,

@@ -1,0 +1,18 @@
+.wrap {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-canvas);
+  pointer-events: none;
+}
+
+/* Mandatory — not optional here. React Three Fiber sets `pointer-events:
+   auto` inline on its own internal wrapper div, overriding the inherited
+   `none` above (confirmed root cause of a real bug fixed on WorkThumbsGate
+   this session). World spans the full page including Contact's real
+   interactive form, CTA, and links — without this, mounting World would
+   silently swallow every click on them. None of World's planned layers
+   need canvas-level hit-testing; any hover-reactivity listens on the real
+   DOM element directly, same as usePointerUniforms.ts. */
+.wrap * {
+  pointer-events: none !important;
+}

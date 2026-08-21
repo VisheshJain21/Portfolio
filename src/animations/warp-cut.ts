@@ -2,21 +2,28 @@
 
 /**
  * Warp Cut — the signature nav transition controller.
- * One GSAP timeline (~950ms): impact (shock ring + postFX spike) →
- * kinetic type blow-up → turbulent liquid wipe (scroll snaps underneath
- * while covered) → landing (type slams home, pill indicator morphs,
- * section reveals fire, Lenis unlocks, focus moves to the heading).
+ * One GSAP timeline (~950ms): impact (shock ring) → kinetic type blow-up →
+ * turbulent liquid wipe (scroll snaps underneath while covered) → landing
+ * (type slams home, pill indicator morphs, section reveals fire, Lenis
+ * unlocks, focus moves to the heading).
  *
  * Contracts:
  *  - singleton: re-triggering kills the running timeline and restarts clean
  *  - locks Lenis only (no overflow toggling → no scrollbar flash/layout shift)
  *  - reduced motion: fast crossfade + instant scroll, nothing else
- *  - shader spike + shock ring gate on warpFX.gpuTier ("low" skips them)
+ *  - shock ring gates on warpFX.gpuTier ("low" skips it)
+ *  - liquid-wipe panel's feDisplacementMap filter ALSO gates on gpuTier —
+ *    an animated SVG displacement filter is expensive to re-composite every
+ *    frame on weaker/mobile GPUs (which are always "low" tier, since
+ *    HeroSceneGate's mobile mode never satisfies mode==="full"); "low"
+ *    falls back to a plain hard-edged wipe, same timing/coverage, just
+ *    without the liquid distortion.
  */
 
 import { gsap, ScrollTrigger } from "@/animations/gsap";
 import { getLenis } from "@/lib/lenis-store";
 import { warpFX } from "@/lib/warp-fx";
+import { setWarpActive } from "@/lib/warp-active";
 
 type WarpElements = {
   root: HTMLElement | null;
@@ -70,7 +77,6 @@ function cleanup(opts?: WarpOptions) {
   if (main) gsap.set(main, { clearProps: "transform,opacity,visibility" });
   opts?.navEl?.removeAttribute("data-warp");
   opts?.holdEl?.removeAttribute("data-warp-hold");
-  warpFX.spike = 0;
 }
 
 let lastOpts: WarpOptions | undefined;
@@ -90,12 +96,19 @@ export function warpTo(href: string, opts: WarpOptions) {
   }
   lastOpts = opts;
 
+  // Pause Hero/Work/World's canvases for the transition — profiling traced
+  // real nav-click lag to those canvases reacting to the large *instant*
+  // scroll jump snapTo() below performs, not to this timeline's own
+  // animation (see lib/warp-active.ts for the full story).
+  setWarpActive(true);
+
   // ---- Reduced motion: crossfade + instant scroll, done. ----
   if (reduced || !els?.panel || !els.type) {
     const fade = els?.fade;
     if (!fade) {
       snapTo(target);
       focusHeading(target);
+      setWarpActive(false);
       return;
     }
     tl = gsap
@@ -103,6 +116,7 @@ export function warpTo(href: string, opts: WarpOptions) {
         onComplete: () => {
           cleanup(opts);
           focusHeading(target);
+          setWarpActive(false);
           tl = null;
         },
       })
@@ -117,6 +131,10 @@ export function warpTo(href: string, opts: WarpOptions) {
   const lenis = getLenis();
   const main = document.querySelector("main");
   const highTier = warpFX.gpuTier === "high";
+  // Low tier: plain wipe, no feDisplacementMap — leave the CSS filter
+  // alone on high tier; `cleanup()`'s `clearProps: "all"` removes this
+  // inline override automatically at the end of every run either way.
+  if (!highTier && panel) gsap.set(panel, { filter: "none" });
   const vw = window.innerWidth;
   const vh = window.innerHeight;
   const cx = opts.clickX || vw / 2;
@@ -143,6 +161,7 @@ export function warpTo(href: string, opts: WarpOptions) {
       cleanup(opts);
       getLenis()?.start();
       focusHeading(target);
+      setWarpActive(false);
       tl = null;
     },
   });
@@ -152,7 +171,6 @@ export function warpTo(href: string, opts: WarpOptions) {
     lenis?.stop();
     opts.navEl?.setAttribute("data-warp", "1");
     opts.holdEl?.setAttribute("data-warp-hold", "1");
-    if (highTier) warpFX.spike = 1; // postprocessing CA + grain surge (decays in-scene)
   }, 0);
 
   if (highTier && ring) {

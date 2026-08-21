@@ -11,6 +11,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap, ScrollTrigger } from "@/animations/gsap";
 import { onSiteReady } from "@/lib/site-ready";
+import { setNavOverlayOpen } from "@/lib/nav-overlay";
 import { identity, contact } from "@/content/site";
 import { warpTo } from "@/animations/warp-cut";
 import Magnetic from "@/components/ui/Magnetic";
@@ -234,6 +235,12 @@ export default function Nav() {
     const t = pillTarget(link);
     if (t) gsap.to(pill, { x: t.x, width: t.w, opacity: 1, duration: 0.5, ease: "expo.out" });
   }, [active]);
+
+  // Publish to the shared bus so canvas gates can pause while it's open —
+  // they're 100% hidden behind the overlay, so this is a pure win.
+  useEffect(() => {
+    setNavOverlayOpen(open);
+  }, [open]);
 
   // Overlay open: close on Escape, lock scroll behind it.
   useEffect(() => {

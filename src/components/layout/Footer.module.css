@@ -40,10 +40,12 @@
 
 .right a {
   color: var(--bone-dim);
+  transition: color 0.3s var(--ease-out);
 }
 
-.right a:hover {
-  color: var(--bone);
+.right a:hover,
+.right a:focus-visible {
+  color: var(--signal-soft);
 }
 
 @media (max-width: 700px) {

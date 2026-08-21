@@ -20,6 +20,11 @@
 .group {
   background: var(--ground);
   padding: clamp(1.4rem, 3vw, 2rem);
+  transition: background-color 0.5s var(--ease-out);
+}
+
+.group:hover {
+  background: var(--panel);
 }
 
 .groupTitle {
@@ -46,6 +51,11 @@
 .skillName {
   font-size: var(--step-0);
   color: var(--bone);
+  transition: color 0.3s var(--ease-out);
+}
+
+.skill:hover .skillName {
+  color: var(--signal-soft);
 }
 
 .bar {
@@ -84,6 +94,10 @@
   animation: scroll 34s linear infinite;
 }
 
+.marquee:hover .track {
+  animation-play-state: paused;
+}
+
 .reverse {
   animation-direction: reverse;
 }
@@ -96,6 +110,11 @@
   color: var(--bone-faint);
   display: inline-flex;
   align-items: center;
+  transition: color 0.3s var(--ease-out);
+}
+
+.mItem:hover {
+  color: var(--signal-soft);
 }
 
 .sep {

@@ -11,6 +11,13 @@
   position: relative;
   margin-top: clamp(2.5rem, 6vw, 4rem);
   padding-left: clamp(1.6rem, 4vw, 2.6rem);
+  /* Without a cap, .head's space-between stretched the date to the full
+     ~1300px+ shell width while role/org/body/tags stayed hard-left at
+     ~700px — read as an unfinished layout rather than an intentional
+     margin. Capping gives the block a real editorial measure; the wide
+     right margin this creates is where ExperienceLayer's rail glow
+     (webgl/world/layers/ExperienceLayer.tsx) reads as content, not void. */
+  max-width: 840px;
 }
 
 .rail {
@@ -41,7 +48,13 @@
   border-radius: 50%;
   background: var(--signal);
   box-shadow: 0 0 0 4px var(--ground), 0 0 16px 2px var(--glow);
-  transform: translateX(-50%);
+  transform: translateX(-50%) scale(1);
+  transition: transform 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+
+.item:hover .node {
+  transform: translateX(-50%) scale(1.35);
+  box-shadow: 0 0 0 4px var(--ground), 0 0 22px 4px var(--glow);
 }
 
 .head {
@@ -58,6 +71,11 @@
   font-size: var(--step-2);
   letter-spacing: -0.015em;
   color: var(--bone);
+  transition: color 0.4s var(--ease-out);
+}
+
+.item:hover .role {
+  color: var(--signal-soft);
 }
 
 .period {
@@ -113,4 +131,12 @@
   border: 1px solid var(--line-strong);
   border-radius: 3px;
   padding: 0.3em 0.65em;
+  transition:
+    color 0.3s var(--ease-out),
+    border-color 0.3s var(--ease-out);
+}
+
+.tag:hover {
+  color: var(--signal-soft);
+  border-color: var(--signal-soft);
 }

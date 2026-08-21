@@ -19,3 +19,8 @@ export { gsap, ScrollTrigger };
 
 /** Shared expressive ease — matches --ease-out token. */
 export const EASE = "expo.out";
+
+/** Sharper "snap into formation" ease — overshoots then settles. Reserved
+ *  for the handful of headline moments using revealSnap(), not a general
+ *  replacement for EASE. */
+export const EASE_SNAP = "back.out(1.7)";

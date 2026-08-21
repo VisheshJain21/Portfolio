@@ -17,6 +17,13 @@ html {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   color-scheme: dark;
+  /* Clip horizontal overflow at the ROOT (initial containing block). This is
+     what `body { overflow-x }` cannot do: position:fixed descendants (nav
+     overlay, marquees, warp layers) are clipped by the ICB, not by body, so
+     without this they can push a phantom horizontal scrollbar. `clip` (not
+     `hidden`) preserves position:sticky and doesn't create a scroll container,
+     so vertical/smooth scroll is unaffected. */
+  overflow-x: clip;
 }
 
 /* Lenis smooth-scroll contract */
@@ -27,9 +34,20 @@ html.lenis body {
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
+/* NOT `.lenis-stopped { overflow: hidden }` (Lenis's own default convention
+   class) — every warpTo() nav transition calls lenis.stop()/.start(), and
+   toggling overflow:hidden removes/restores the scrollbar's reserved width
+   on every single click. That resizes every position:fixed WebGL canvas
+   (Hero/Work/World) by the scrollbar's width, which R3F's ResizeObserver
+   answers with a real WebGLRenderer.setSize() — an expensive framebuffer
+   reallocation — often several times in a feedback loop before it settles.
+   Root-caused via a CPU profile + canvas.width tracing during a laggy nav
+   click (canvas.width oscillating 1440<->1424, exactly one scrollbar's
+   width, precisely matching WebGLRenderer.setSize as the dominant cost).
+   lenis.stop() already fully blocks scroll input on its own; it doesn't
+   need this class's help, and the class actively worked against the
+   "locks scroll via lenis.stop() ONLY — never overflow toggles" contract
+   warp-cut.ts's own comment already assumed was true. */
 
 body {
   background: var(--ground);
@@ -37,7 +55,7 @@ body {
   font-family: var(--font-body);
   font-size: var(--step-0);
   line-height: 1.55;
-  overflow-x: hidden;
+  overflow-x: clip; /* upgraded from hidden — see html rule above */
   min-height: 100svh;
 }
 
@@ -53,6 +71,27 @@ main {
   main {
     margin-bottom: var(--footer-h, 260px);
   }
+}
+
+/* ============================================================
+   Responsive invariants — the durable guard so layout can't
+   silently break on resize again. Two commonest failure modes:
+     1. a long unbroken token (URL / id / code) forcing the page
+        wider than the viewport,
+     2. a flex/grid child refusing to shrink below its content.
+   `:where()` = zero specificity, so any component can still
+   override intentionally. Any NEW overflow is caught by the
+   automated breakpoint test (npm run check:responsive).
+   ============================================================ */
+:where(h1, h2, h3, h4, h5, h6, p, li, a, dd, dt, span, blockquote) {
+  overflow-wrap: break-word;
+}
+/* Grid/grid-and-flex layout children default to min-width/height: auto and
+   won't shrink past content — the #1 source of horizontal overflow. Reset
+   it for the flex/grid items inside page sections (opt-out via a component
+   rule if a fixed track is genuinely wanted). */
+:where(main section) :where([class*="grid"], [class*="row"], [class*="list"], [class*="head"]) > * {
+  min-width: 0;
 }
 
 ::selection {
@@ -98,6 +137,18 @@ ol {
 .section {
   position: relative;
   padding-block: var(--section-y);
+}
+
+/* Deliberate rhythm variants — see tokens.css for why the base was cut.
+   Applied selectively so spacing reads as authored pacing (some sections
+   sit close and connected, one or two earn a real breath) instead of one
+   flat gap repeated at every boundary. */
+.section--tight {
+  padding-block: var(--section-y-tight);
+}
+
+.section--loose {
+  padding-block: var(--section-y-loose);
 }
 
 /* ---------- Typography helpers ---------- */
@@ -255,6 +306,18 @@ body[data-cursor="on"] {
 body[data-cursor="on"] a,
 body[data-cursor="on"] button {
   cursor: none;
+}
+
+/* Fault-and-heal signature moment (components/ui/FaultSequence.tsx) —
+   every component already reads --signal/--signal-soft/--glow via CSS var,
+   so swapping the token value here recolors every amber accent site-wide
+   for free, with zero component changes. Transitioned so the swap itself
+   reads as part of the glitch rather than a hard cut. */
+body.is-fault {
+  --signal: var(--fault);
+  --signal-soft: var(--fault);
+  --glow: var(--fault-glow);
+  transition: color 0.4s var(--ease-out);
 }
 
 @media (prefers-reduced-motion: reduce) {

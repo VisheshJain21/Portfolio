@@ -11,7 +11,11 @@ type IconName =
   | "instagram"
   | "phone"
   | "resume"
-  | "arrow";
+  | "arrow"
+  | "eye"
+  | "heart"
+  | "sound-on"
+  | "sound-off";
 
 const STROKE = {
   fill: "none",
@@ -24,9 +28,12 @@ const STROKE = {
 export default function Icon({
   name,
   className,
+  filled,
 }: {
   name: IconName;
   className?: string;
+  /** heart only: outline at rest, solid when true (the "liked" state). */
+  filled?: boolean;
 }) {
   return (
     <svg
@@ -76,6 +83,34 @@ export default function Icon({
       {name === "arrow" && (
         <g {...STROKE}>
           <path d="M7 17 17 7M9 7h8v8" />
+        </g>
+      )}
+      {name === "eye" && (
+        <g {...STROKE}>
+          <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z" />
+          <circle cx="12" cy="12" r="3" />
+        </g>
+      )}
+      {name === "heart" && (
+        <path
+          d="M12 20.5s-7.5-4.6-9.9-9.3C.6 7.9 2.1 4.5 5.4 3.8c2-.4 3.9.6 4.9 2.3.2.3.6.3.8 0 1-1.7 2.9-2.7 4.9-2.3 3.3.7 4.8 4.1 3.3 7.4-2.4 4.7-9.9 9.3-9.9 9.3Z"
+          fill={filled ? "currentColor" : "none"}
+          stroke="currentColor"
+          strokeWidth={filled ? 0 : 1.6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      )}
+      {name === "sound-on" && (
+        <g {...STROKE}>
+          <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+          <path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" />
+        </g>
+      )}
+      {name === "sound-off" && (
+        <g {...STROKE}>
+          <path d="M4 9v6h4l5 4V5L8 9H4Z" />
+          <path d="m16 9 5 6M21 9l-5 6" />
         </g>
       )}
     </svg>

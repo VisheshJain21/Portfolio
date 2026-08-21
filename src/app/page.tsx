@@ -9,12 +9,15 @@ import Experience from "@/components/sections/Experience";
 import Process from "@/components/sections/Process";
 import Capabilities from "@/components/sections/Capabilities";
 import Contact from "@/components/sections/Contact";
+import WorldGate from "@/webgl/world/WorldGate";
+import SpineNodesOverlay from "@/components/ui/SpineNodesOverlay";
+import FaultSequence from "@/components/ui/FaultSequence";
 
 export default function Home() {
   return (
     <>
       <Nav />
-      <main>
+      <main id="site-main">
         <Hero />
         <Manifesto />
         <About />
@@ -25,6 +28,9 @@ export default function Home() {
         <Capabilities />
         <Contact />
       </main>
+      <WorldGate />
+      <SpineNodesOverlay />
+      <FaultSequence />
       <Footer />
     </>
   );

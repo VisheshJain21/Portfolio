@@ -7,7 +7,7 @@
  */
 
 import { useEffect, useMemo, useRef } from "react";
-import { revealUp, drawHairline } from "@/animations/reveals";
+import { revealUp, drawHairline, splitChars, revealSnap } from "@/animations/reveals";
 import { projects, workMeta } from "@/content/projects";
 import WorkThumbsGate from "@/webgl/work/WorkThumbsGate";
 import type { ThumbTarget } from "@/webgl/work/WorkThumbsScene";
@@ -23,7 +23,8 @@ export default function Work() {
     () =>
       projects.map((p) => ({
         key: p.index,
-        src: p.thumb,
+        motif: p.motif,
+        seed: p.seed,
         domRef: {
           get current() {
             return thumbRefs.current[p.index] ?? null;
@@ -43,13 +44,15 @@ export default function Work() {
     rows.forEach((row) => revealUp(row, row, { y: 44 }));
     const head = root.querySelector<HTMLElement>(`.${styles.head}`);
     if (head) revealUp(head, head, { y: 24 });
+    const heading = root.querySelector<HTMLElement>(`.${styles.heading}`);
+    if (heading) revealSnap(splitChars(heading), heading, { stagger: 0.045, start: "top 80%" });
     root
       .querySelectorAll<HTMLElement>("[data-hairline]")
       .forEach((el) => drawHairline(el));
   }, []);
 
   return (
-    <section ref={rootRef} className="section" id="work" aria-label="Selected work">
+    <section ref={rootRef} className="section section--loose" id="work" aria-label="Selected work">
       <WorkThumbsGate sectionRef={rootRef} targets={targets} />
       <div className="shell">
         <div className={styles.head}>
@@ -71,6 +74,7 @@ export default function Work() {
                 <div
                   className={styles.row}
                   data-cursor-view={!primaryLink ? "Confidential" : undefined}
+                  data-fault-trigger={p.index === "04" ? "" : undefined}
                 >
                   {primaryLink && (
                     <a
@@ -84,11 +88,12 @@ export default function Work() {
                   )}
                   <span className={styles.index}>{p.index}</span>
                   {/* Thumb slot — a normal DOM element for layout/a11y.
-                      WorkThumbsGate positions a WebGL ripple-plane exactly
-                      over it every frame; this <img> is what shows if
-                      WebGL is unavailable, reduced-motion, or the plane's
-                      texture fails to load (fallback is "free" — the DOM
-                      card exists regardless). */}
+                      WorkThumbsGate positions a procedural WebGL motif
+                      exactly over it every frame (webgl/work/project-shader.ts,
+                      no texture — can't fail to load); this <img> is the
+                      fallback shown only when WebGL is unavailable or
+                      reduced-motion is set, hand-drawn to echo the same
+                      motif so the two states tell the same visual story. */}
                   <div
                     ref={(el) => {
                       thumbRefs.current[p.index] = el;

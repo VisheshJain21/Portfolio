@@ -11,6 +11,7 @@ import { useEffect, useRef } from "react";
 import { gsap, EASE } from "@/animations/gsap";
 import { revealUp } from "@/animations/reveals";
 import { techStack, capabilities } from "@/content/site";
+import { registerAnchor } from "@/lib/section-anchors";
 import styles from "./Capabilities.module.css";
 
 function Marquee({ items, reverse }: { items: string[]; reverse?: boolean }) {
@@ -31,6 +32,12 @@ function Marquee({ items, reverse }: { items: string[]; reverse?: boolean }) {
 
 export default function Capabilities() {
   const rootRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    registerAnchor("capabilities", root);
+    return () => registerAnchor("capabilities", null);
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -62,7 +69,7 @@ export default function Capabilities() {
   }, []);
 
   return (
-    <section ref={rootRef} className={`section ${styles.section}`} id="stack" aria-label="Tech stack">
+    <section ref={rootRef} className={`section section--tight ${styles.section}`} id="stack" aria-label="Tech stack">
       <div className="shell">
         <p className="eyebrow">Tech Stack</p>
         <h2 className={`display ${styles.heading}`}>

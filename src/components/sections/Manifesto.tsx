@@ -9,10 +9,17 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "@/animations/gsap";
 import { manifesto } from "@/content/site";
+import { registerAnchor } from "@/lib/section-anchors";
 import styles from "./Manifesto.module.css";
 
 export default function Manifesto() {
   const rootRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    registerAnchor("manifesto", root);
+    return () => registerAnchor("manifesto", null);
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -43,7 +50,7 @@ export default function Manifesto() {
   }, []);
 
   return (
-    <section ref={rootRef} className={`section ${styles.section}`} aria-label="Manifesto">
+    <section ref={rootRef} className={`section section--tight ${styles.section}`} id="manifesto" aria-label="Manifesto">
       <div className="shell">
         <p className="eyebrow">{manifesto.eyebrow}</p>
         <p className={`display ${styles.statement}`}>

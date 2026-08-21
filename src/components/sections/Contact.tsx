@@ -8,11 +8,17 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { revealLines, revealUp } from "@/animations/reveals";
+import { revealUp, revealSnap } from "@/animations/reveals";
 import { contact } from "@/content/site";
+import { registerAnchor } from "@/lib/section-anchors";
 import Magnetic from "@/components/ui/Magnetic";
 import Icon from "@/components/ui/Icon";
 import styles from "./Contact.module.css";
+
+// A dead 404 on a hiring-focused portfolio is worse than no link at all —
+// flip this once the real PDF lands at public/vishesh-jain-resume.pdf
+// (contact.resume already points there, see content/site.ts's TODO).
+const HAS_RESUME = false;
 
 // Direct channels — each reuses the same Magnetic hook as the email CTA.
 const CHANNELS = [
@@ -20,7 +26,9 @@ const CHANNELS = [
   { label: "LinkedIn", href: contact.linkedin, icon: "linkedin", external: true },
   { label: "Instagram", href: contact.instagram, icon: "instagram", external: true },
   { label: contact.phoneDisplay, href: `tel:${contact.phone}`, icon: "phone" },
-  { label: "Résumé", href: contact.resume, icon: "resume", download: true },
+  ...(HAS_RESUME
+    ? [{ label: "Résumé", href: contact.resume, icon: "resume", download: true } as const]
+    : []),
 ] as const;
 
 export default function Contact() {
@@ -29,10 +37,20 @@ export default function Contact() {
 
   useEffect(() => {
     const root = rootRef.current;
+    registerAnchor("contact", root);
+    return () => registerAnchor("contact", null);
+  }, []);
+
+  useEffect(() => {
+    const root = rootRef.current;
     if (!root) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) return;
-    revealLines(root, { onScroll: true });
+    // Snap the two whole line-mask boxes in (not their .line-inner children —
+    // those sit inside an overflow:hidden mask built for a pure Y-translate;
+    // scaling/rotating the clipped child would clip its own edges mid-tween).
+    const lines = root.querySelectorAll<HTMLElement>(".line-mask");
+    if (lines.length) revealSnap(lines, root, { stagger: 0.12, start: "top 78%" });
     const meta = root.querySelectorAll<HTMLElement>("[data-contact-fade]");
     revealUp(meta, root, { stagger: 0.08, start: "top 72%" });
   }, []);
@@ -53,7 +71,7 @@ export default function Contact() {
   };
 
   return (
-    <section ref={rootRef} className={`section ${styles.section}`} id="contact" aria-label="Contact">
+    <section ref={rootRef} className={`section section--loose ${styles.section}`} id="contact" aria-label="Contact">
       <div className={`shell ${styles.grid}`}>
         <div className={styles.left}>
           <p className="eyebrow">Contact</p>

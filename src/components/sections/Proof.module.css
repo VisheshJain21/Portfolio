@@ -6,13 +6,9 @@
   overflow: hidden;
 }
 
-.section::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(60% 120% at 15% 50%, rgba(255, 106, 43, 0.06), transparent 70%);
-  pointer-events: none;
-}
+/* Ambient glow behind the stat grid is now the real GPU wash from
+   webgl/world/layers/ProofLayer.tsx (World canvas) — replaces what used
+   to be a static CSS radial-gradient here. */
 
 .grid {
   display: grid;
@@ -41,6 +37,14 @@
   letter-spacing: -0.03em;
   color: var(--bone);
   font-variant-numeric: tabular-nums;
+  transition:
+    color 0.4s var(--ease-out),
+    text-shadow 0.4s var(--ease-out);
+}
+
+.cell:hover .value {
+  color: var(--signal-soft);
+  text-shadow: 0 0 28px var(--glow);
 }
 
 .unit {

@@ -10,10 +10,17 @@
 import { useEffect, useRef } from "react";
 import { gsap, EASE } from "@/animations/gsap";
 import { proofStats } from "@/content/site";
+import { registerAnchor } from "@/lib/section-anchors";
 import styles from "./Proof.module.css";
 
 export default function Proof() {
   const rootRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    registerAnchor("proof", root);
+    return () => registerAnchor("proof", null);
+  }, []);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -37,10 +44,10 @@ export default function Proof() {
   }, []);
 
   return (
-    <section ref={rootRef} className={styles.section} aria-label="Track record">
+    <section ref={rootRef} className={styles.section} id="proof" aria-label="Track record">
       <div className={`shell ${styles.grid}`}>
         {proofStats.map((s) => (
-          <div key={s.label} className={styles.cell}>
+          <div key={s.label} className={styles.cell} data-glow-cell>
             <span className={styles.value}>
               {s.value}
               <span className={styles.unit}>{s.unit}</span>
