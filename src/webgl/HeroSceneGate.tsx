@@ -24,6 +24,7 @@ import ErrorBoundary from "@/components/ui/ErrorBoundary";
 import { useDeviceTier } from "@/hooks/useDeviceTier";
 import { useSiteReady } from "@/hooks/useSiteReady";
 import { useNavOverlayOpen } from "@/lib/nav-overlay";
+import { useWarpActive } from "@/lib/warp-active";
 import { warpFX } from "@/lib/warp-fx";
 import styles from "./HeroSceneGate.module.css";
 
@@ -39,11 +40,16 @@ export default function HeroSceneGate() {
   const ready = useSiteReady();
   const tier = useDeviceTier();
   const navOverlayOpen = useNavOverlayOpen();
+  const warpActive = useWarpActive();
   // Paused (frameloop "never") until the loader clears AND we're on-screen:
   // no WebGL renders behind the black loading screen; resumes at exit.
   // Also pauses while the mobile nav overlay covers the whole viewport —
-  // the canvas is 100% hidden behind it either way, so this is free.
-  const paused = !ready || !inView || navOverlayOpen;
+  // the canvas is 100% hidden behind it either way, so this is free. Also
+  // pauses for the ~1s a Nav warp transition is running — see warp-active.ts
+  // for why (this canvas reacting to the transition's instant scroll jump
+  // was the real cause of the nav-click lag it was named for, not the
+  // transition's own animation).
+  const paused = !ready || !inView || navOverlayOpen || warpActive;
 
   // Publish the live quality tier so the Warp Cut controller can gate
   // its shock ring on the same signal as the hero bloom.

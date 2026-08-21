@@ -23,6 +23,7 @@
 import { gsap, ScrollTrigger } from "@/animations/gsap";
 import { getLenis } from "@/lib/lenis-store";
 import { warpFX } from "@/lib/warp-fx";
+import { setWarpActive } from "@/lib/warp-active";
 
 type WarpElements = {
   root: HTMLElement | null;
@@ -95,12 +96,19 @@ export function warpTo(href: string, opts: WarpOptions) {
   }
   lastOpts = opts;
 
+  // Pause Hero/Work/World's canvases for the transition — profiling traced
+  // real nav-click lag to those canvases reacting to the large *instant*
+  // scroll jump snapTo() below performs, not to this timeline's own
+  // animation (see lib/warp-active.ts for the full story).
+  setWarpActive(true);
+
   // ---- Reduced motion: crossfade + instant scroll, done. ----
   if (reduced || !els?.panel || !els.type) {
     const fade = els?.fade;
     if (!fade) {
       snapTo(target);
       focusHeading(target);
+      setWarpActive(false);
       return;
     }
     tl = gsap
@@ -108,6 +116,7 @@ export function warpTo(href: string, opts: WarpOptions) {
         onComplete: () => {
           cleanup(opts);
           focusHeading(target);
+          setWarpActive(false);
           tl = null;
         },
       })
@@ -152,6 +161,7 @@ export function warpTo(href: string, opts: WarpOptions) {
       cleanup(opts);
       getLenis()?.start();
       focusHeading(target);
+      setWarpActive(false);
       tl = null;
     },
   });

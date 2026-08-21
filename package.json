@@ -1,6 +1,9 @@
 {
   "name": "vj-portfolio",
   "version": "0.1.0",
+  "engines": {
+    "node": ">=22.5.0"
+  },
   "private": true,
   "description": "Vishesh Jain — AI-Native Engineer. Personal portfolio: systems that think.",
   "scripts": {

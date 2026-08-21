@@ -1,32 +1,27 @@
 "use client";
 
 /**
- * SpineLayer — the living agent pipeline. A single thin amber thread runs
- * through the six tracked sections in page order, each a node on the
- * path. On the shared InstancedMesh, indices 0..5 are the nodes
- * (brighten/grow as their section reaches peak visibility, same
- * "arrival" curve every other layer uses); indices 6..10 are the five
- * inter-node signals — not decorative loops, but a direct function of
+ * SpineLayer — the living agent pipeline. Six nodes (one per tracked
+ * section) plus five inter-node signal pulses share one InstancedMesh —
+ * indices 0..5 are the nodes (brighten/grow as their section reaches
+ * peak visibility, same "arrival" curve every other layer uses); indices
+ * 6..10 are the pulses — not decorative loops, but a direct function of
  * the destination section's own scroll progress (0 = signal still
  * waiting at the node above, 0.5 = arrived, only visible mid-transit)
  * so a signal travels forward when you scroll down and pulls back when
  * you scroll up, exactly like the pipelines this is modeling.
  *
- * Perf discipline: one native `<line>` (a plain THREE.Line, not drei's
- * fat-line `<Line>` — that one's Line2/LineMaterial shader is heavy
- * enough to compile that its first real-geometry frame blew the 4x-
- * throttle scroll budget in testing; a thin schematic trace reads just
- * as well here and is essentially free) + one InstancedMesh (11
- * instances, matrices rebuilt with a single reused THREE.Object3D per
- * frame — nowhere near the "per-frame JS loop over many instances" the
- * plan warns against). Column position mirrors `.shell`'s own max-
- * width/gutter math (tokens.css) rather than hard-coding a pixel value
- * that would drift from the real layout.
+ * A connecting line between the nodes was part of the original build
+ * but was removed on user feedback (it read as a stray line cutting
+ * through content rather than a deliberate design element) — the nodes
+ * and traveling pulses carry the "pipeline" idea on their own.
  *
- * The line's position buffer is written in place every frame
- * (`attribute.array[...] = ...; attribute.needsUpdate = true`) rather
- * than replaced — the same "mutate, don't reallocate" discipline as
- * every other per-frame write in webgl/.
+ * Perf discipline: one InstancedMesh (11 instances, matrices rebuilt
+ * with a single reused THREE.Object3D per frame — nowhere near the
+ * "per-frame JS loop over many instances" the plan warns against).
+ * Column position mirrors `.shell`'s own max-width/gutter math
+ * (tokens.css) rather than hard-coding a pixel value that would drift
+ * from the real layout.
  *
  * Node/pulse world positions fall naturally off-frame when their section
  * is scrolled far away (same trick as every other layer: presence comes
@@ -65,21 +60,6 @@ export default function SpineLayer({
   const nodeActive = useRef(new Float32Array(NUM_NODES));
   const seeded = useRef(new Array<boolean>(NUM_NODES).fill(false));
   const dummy = useMemo(() => new THREE.Object3D(), []);
-  const linePositions = useMemo(() => new Float32Array(NUM_NODES * 3), []);
-
-  // A plain THREE.Line built imperatively via `primitive` — R3F's lowercase
-  // `<line>` intrinsic collides with SVG's, and its `threeLine` alias needs
-  // an explicit extend() this project has no other reason to add, so the
-  // primitive escape hatch (the documented way to use a 3rd-party/ambiguous
-  // Three.js object declaratively) is the simpler, guaranteed-working path.
-  const lineObj = useMemo(() => {
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute("position", new THREE.BufferAttribute(linePositions, 3));
-    const material = new THREE.LineBasicMaterial({ color: AMBER, transparent: true, opacity: 0.4 });
-    const obj = new THREE.Line(geometry, material);
-    obj.frustumCulled = false;
-    return obj;
-  }, [linePositions]);
 
   useFrame(({ size, clock }) => {
     const mesh = meshRef.current;
@@ -96,7 +76,6 @@ export default function SpineLayer({
     const faultT = faultFX.active ? (performance.now() - faultFX.startedAt) / FAULT_DURATION_MS : 0;
     const faultIntensity = faultFX.active ? faultEnvelope(faultT) : 0;
     if (matRef.current) matRef.current.uColor.copy(AMBER).lerp(FAULT_COLOR, faultIntensity);
-    (lineObj.material as THREE.LineBasicMaterial).color.copy(AMBER).lerp(FAULT_COLOR, faultIntensity);
 
     for (let i = 0; i < NUM_NODES; i++) {
       const p = progress.get(SECTION_ORDER[i]);
@@ -123,10 +102,6 @@ export default function SpineLayer({
       dummy.scale.set(s, s, 1);
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
-
-      linePositions[i * 3] = nodeX.current[i];
-      linePositions[i * 3 + 1] = nodeY.current[i];
-      linePositions[i * 3 + 2] = 0;
     }
 
     const skipPulses = tier?.mobile ?? false;
@@ -150,17 +125,12 @@ export default function SpineLayer({
     }
 
     mesh.instanceMatrix.needsUpdate = true;
-
-    (lineObj.geometry.attributes.position as THREE.BufferAttribute).needsUpdate = true;
   });
 
   return (
-    <>
-      <primitive object={lineObj} />
-      <instancedMesh ref={meshRef} args={[undefined, undefined, TOTAL_INSTANCES]}>
-        <planeGeometry args={[1, 1]} />
-        <spineNodeMaterial ref={matRef} uColor={AMBER} uOpacity={0.75} transparent depthWrite={false} />
-      </instancedMesh>
-    </>
+    <instancedMesh ref={meshRef} args={[undefined, undefined, TOTAL_INSTANCES]}>
+      <planeGeometry args={[1, 1]} />
+      <spineNodeMaterial ref={matRef} uColor={AMBER} uOpacity={0.75} transparent depthWrite={false} />
+    </instancedMesh>
   );
 }

@@ -26,6 +26,7 @@ import ErrorBoundary from "@/components/ui/ErrorBoundary";
 import { useDeviceTier } from "@/hooks/useDeviceTier";
 import { useSiteReady } from "@/hooks/useSiteReady";
 import { useNavOverlayOpen } from "@/lib/nav-overlay";
+import { useWarpActive } from "@/lib/warp-active";
 import styles from "./WorldGate.module.css";
 
 const WorldScene = dynamic(() => import("./WorldScene"), { ssr: false });
@@ -37,12 +38,15 @@ export default function WorldGate() {
   const ready = useSiteReady();
   const tier = useDeviceTier();
   const navOverlayOpen = useNavOverlayOpen();
+  const warpActive = useWarpActive();
   // Also pauses while the mobile nav overlay covers the whole viewport —
   // this canvas is the one most likely to be continuously active (it
   // spans nearly the whole scroll range via #site-main), so this matters
   // most here: 6 layers' worth of per-frame work otherwise keeps running
-  // for zero visual benefit while fully hidden behind the overlay.
-  const paused = !ready || !inView || navOverlayOpen;
+  // for zero visual benefit while fully hidden behind the overlay. Also
+  // pauses during a Nav warp transition (see lib/warp-active.ts) for the
+  // same reason, alongside Hero/Work.
+  const paused = !ready || !inView || navOverlayOpen || warpActive;
 
   useEffect(() => {
     if (!tier) return;

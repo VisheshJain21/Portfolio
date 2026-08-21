@@ -20,15 +20,30 @@
  * extra scroll-offset math — see WorkThumbsScene for why. It is fully
  * transparent except where a plane is drawn, so spanning the viewport
  * never visually affects any other section.
+ *
+ * Rendered via a portal into `document.body` rather than in-place inside
+ * `<Work>` (a descendant of `<main>`) — CSS spec makes any `transform`d
+ * ancestor the new containing block for `position:fixed` descendants, and
+ * warp-cut.ts's nav-transition briefly applies `transform: scale(...)` to
+ * `main`. Without the portal, that turned this element's `inset:0` into
+ * "cover all of main's ~7000px scroll height" instead of the viewport for
+ * that instant — a real ResizeObserver-measured jump from 900px to ~7700px
+ * tall, forcing an enormous WebGL framebuffer reallocation on every single
+ * nav click (root-caused via ResizeObserver + WebGLRenderer.setSize
+ * tracing on a laggy-nav-click repro). WorldGate already portals-in-effect
+ * by simply being a sibling of `<main>`, not a descendant — this matches
+ * that same safe placement.
  */
 
 import dynamic from "next/dynamic";
+import { createPortal } from "react-dom";
 import { Canvas, useThree } from "@react-three/fiber";
 import { useCallback, useEffect, useState } from "react";
 import ErrorBoundary from "@/components/ui/ErrorBoundary";
 import { useDeviceTier } from "@/hooks/useDeviceTier";
 import { useSiteReady } from "@/hooks/useSiteReady";
 import { useNavOverlayOpen } from "@/lib/nav-overlay";
+import { useWarpActive } from "@/lib/warp-active";
 import type { ThumbTarget } from "./WorkThumbsScene";
 import styles from "./WorkThumbsGate.module.css";
 
@@ -48,10 +63,14 @@ export default function WorkThumbsGate({
   const ready = useSiteReady();
   const tier = useDeviceTier();
   const navOverlayOpen = useNavOverlayOpen();
+  const warpActive = useWarpActive();
   // Paused until the loader clears AND the Work section is on-screen —
   // same context-safe pattern as the hero (never renders behind the loader).
-  // Also pauses while the mobile nav overlay covers the whole viewport.
-  const paused = !ready || !inView || navOverlayOpen;
+  // Also pauses while the mobile nav overlay covers the whole viewport, and
+  // for the ~1s a Nav warp transition runs — see lib/warp-active.ts (this
+  // canvas reacting to the transition's instant scroll jump was the real
+  // cause of the nav-click lag it's named for).
+  const paused = !ready || !inView || navOverlayOpen || warpActive;
 
   useEffect(() => {
     if (!tier) return;
@@ -72,7 +91,7 @@ export default function WorkThumbsGate({
 
   if (!enabled || broken) return null;
 
-  return (
+  return createPortal(
     <div className={styles.wrap} aria-hidden="true">
       <ErrorBoundary fallback={null} onError={onError}>
         <Canvas
@@ -90,7 +109,8 @@ export default function WorkThumbsGate({
           <WorkThumbsScene targets={targets} />
         </Canvas>
       </ErrorBoundary>
-    </div>
+    </div>,
+    document.body,
   );
 }
 

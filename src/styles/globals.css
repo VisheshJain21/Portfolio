@@ -34,9 +34,20 @@ html.lenis body {
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
+/* NOT `.lenis-stopped { overflow: hidden }` (Lenis's own default convention
+   class) — every warpTo() nav transition calls lenis.stop()/.start(), and
+   toggling overflow:hidden removes/restores the scrollbar's reserved width
+   on every single click. That resizes every position:fixed WebGL canvas
+   (Hero/Work/World) by the scrollbar's width, which R3F's ResizeObserver
+   answers with a real WebGLRenderer.setSize() — an expensive framebuffer
+   reallocation — often several times in a feedback loop before it settles.
+   Root-caused via a CPU profile + canvas.width tracing during a laggy nav
+   click (canvas.width oscillating 1440<->1424, exactly one scrollbar's
+   width, precisely matching WebGLRenderer.setSize as the dominant cost).
+   lenis.stop() already fully blocks scroll input on its own; it doesn't
+   need this class's help, and the class actively worked against the
+   "locks scroll via lenis.stop() ONLY — never overflow toggles" contract
+   warp-cut.ts's own comment already assumed was true. */
 
 body {
   background: var(--ground);
